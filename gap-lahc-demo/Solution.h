@@ -1,5 +1,5 @@
-#ifndef SOLUTION
-#define SOLUTION
+#ifndef SOLUTION_H
+#define SOLUTION_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,8 +10,20 @@
 #include "gpulib/types.h"
 
 
-EXTERN_C_BEGIN
+typedef int TcostFinal;
+typedef int Texcess;
+typedef int Ts;
+typedef int TresUsage;
 
-EXTERN_C_END
+typedef struct{
+	int costFinal;
+	int excess;
+    int *s;
+    int *resUsage;
+}Solution;
+
+
+
+
 
 #endif
