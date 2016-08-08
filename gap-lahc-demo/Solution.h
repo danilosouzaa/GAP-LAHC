@@ -22,8 +22,8 @@ typedef struct{
     int *resUsage;
 }Solution;
 
+Solution* allocationPointersSolution(Instance *inst);
 
-
-
+void showSolution(Solution *sol, Instance *inst);
 
 #endif
