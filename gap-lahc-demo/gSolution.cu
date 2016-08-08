@@ -3,7 +3,7 @@
 Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents){
 	printf("Begin createGpuSolution!\n");
 
-	size_solution = sizeof(Solution)
+	size_t size_solution = sizeof(Solution)
 						+ sizeof(Ts)*nJobs //vector s
 						+ sizeof(TresUsage)*mAgents; // vector resUsage
 	Solution *d_sol;
@@ -11,7 +11,7 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
 	printf("malloc solution ok!");
 	getchar();
 	gpuMemset(d_sol,0,size_solution);
-	printf("memset Solution ok!")
+	printf("memset Solution ok!");
 	getchar();
 
 	h_solution->s = (Ts*)(d_sol+1);

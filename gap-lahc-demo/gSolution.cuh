@@ -9,7 +9,7 @@ extern "C" {
 #include "Solution.h"
 
 }
-/*
+
 
 
 #endif /* GSOLUTION_CUH_ */

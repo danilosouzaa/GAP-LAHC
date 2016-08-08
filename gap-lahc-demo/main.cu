@@ -1,13 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <curand.h>
+#include <curand_kernel.h>
 
 #include "gpulib/types.h"
 #include "gpulib/gpu.cuh"
 
 #include "Instance.h"
 
-__global__ void teste(Instance *inst){
-	printf("number of jobs: %d \n",inst->nJobs);
+__global__ void teste(Instance *inst, unsigned int seed, curandState_t* states){
+	int aux;
+	curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
+	if(threadIdx.x < 1){
+		//aux = curand(&states[blockIdx.x])%10;
+		printf("number of jobs: %d \n",inst->nJobs);
+		printf("Valor randomico : %d \n", curand(&states[threadIdx.x])%10);
+		printf("Valor randomico : %d \n", curand(&states[threadIdx.x])%10);
+	}
 
 }
 
@@ -37,6 +46,9 @@ int main(){
 	}
 
 	Instance *d_instance;
+	curandState_t* states;
+	cudaMalloc((void**) &states, 2 * sizeof(curandState_t));
+
 
 	Instance *inst = loadInstance(fileName);
 	showInstance(inst);
@@ -50,7 +62,7 @@ int main(){
 	cudaEventCreate(&stop);
 
 	cudaEventRecord(start);
-	teste<<<1,1>>>(d_instance);
+	teste<<<1,2>>>(d_instance, time(NULL), states);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
