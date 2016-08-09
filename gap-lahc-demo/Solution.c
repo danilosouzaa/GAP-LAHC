@@ -23,6 +23,6 @@ void showSolution(Solution *sol, Instance *inst){
 		printf("Job %d allocated in Agent %d.\n",i+1, sol->s[i]+1);
 	}
 	for(i=0;i<inst->mAgents;i++){
-		printf("Resources Usage in Agent %d: %d.\n",i+1,sol->resUsage[i]+1);
+		printf("Resources Usage in Agent %d: %d.\n",i+1,sol->resUsage[i]);
 	}
 }

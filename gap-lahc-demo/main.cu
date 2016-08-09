@@ -61,7 +61,8 @@ int main(){
 	cudaEventCreate(&stop);
 
 	cudaEventRecord(start);
-	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states,1000);
+	for(int i=0;i<10;i++)
+		SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states,1000);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
