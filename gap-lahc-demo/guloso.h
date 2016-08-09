@@ -8,8 +8,11 @@
 #include "Instance.h"
 #include "Solution.h"
 
+EXTERN_C_BEGIN
+
 int* inicializeVector(Instance *inst, int p1, int p2);
 
 Solution* guloso(Instance *inst, int p1, int p2);
 
+EXTERN_C_END
 #endif

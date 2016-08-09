@@ -7,18 +7,10 @@
 #include "gpulib/gpu.cuh"
 
 #include "Instance.h"
+#include "Solution.h"
+#include "gSolution.cuh"
+#include "guloso.h"
 
-__global__ void teste(Instance *inst, unsigned int seed, curandState_t* states){
-	int aux;
-	curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
-	if(threadIdx.x < 1){
-		//aux = curand(&states[blockIdx.x])%10;
-		printf("number of jobs: %d \n",inst->nJobs);
-		printf("Valor randomico : %d \n", curand(&states[threadIdx.x])%10);
-		printf("Valor randomico : %d \n", curand(&states[threadIdx.x])%10);
-	}
-
-}
 
 int main(){
 	const char *fileName = "a05100";
@@ -46,23 +38,30 @@ int main(){
 	}
 
 	Instance *d_instance;
+	Solution *d_solution;
 	curandState_t* states;
 	cudaMalloc((void**) &states, 2 * sizeof(curandState_t));
 
 
 	Instance *inst = loadInstance(fileName);
+	Solution *sol = allocationPointersSolution(inst);
+	sol = guloso(inst,1,2);
 	showInstance(inst);
 	printf("Load data instance ok!\n");
 	getchar();
+	showSolution(sol,inst);
+	printf("greedy solution ok!\n");
+	getchar();
 
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
+	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
 
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
 	cudaEventRecord(start);
-	teste<<<1,2>>>(d_instance, time(NULL), states);
+	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states,1000);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
@@ -70,7 +69,9 @@ int main(){
 	printf("time: %.4fms\n", milliseconds);
 
 	gpuFree(d_instance);
+	gpuFree(d_solution);
 	free(inst);
+	free(sol);
 	printf("program finished successfully!\n");
 	return 0;
 }

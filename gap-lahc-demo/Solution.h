@@ -9,7 +9,7 @@
 
 #include "gpulib/types.h"
 
-
+EXTERN_C_BEGIN
 typedef int TcostFinal;
 typedef int Texcess;
 typedef int Ts;
@@ -26,4 +26,9 @@ Solution* allocationPointersSolution(Instance *inst);
 
 void showSolution(Solution *sol, Instance *inst);
 
+Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents);
+
+EXTERN_C_END
+
 #endif
+

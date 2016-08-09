@@ -51,7 +51,7 @@ Solution* guloso(Instance *inst, int p1, int p2)
     int i,j,agent;
     int cont=0;
     memset(allocated,0,sizeof(int)*inst->nJobs );
-    Solution *sol=allocatedPointersSolution(inst->nJobs ,inst->mAgents);
+    Solution *sol = allocationPointersSolution(inst);
     sol->costFinal=0;
     vOrdem=inicializeVector(inst,p1,p2);
     for(i=0; i<inst->nJobs ; i++)
@@ -71,7 +71,7 @@ Solution* guloso(Instance *inst, int p1, int p2)
         }
     }
     if(cont!=inst->nJobs ){
-        sol->custo_final=0;
+        sol->costFinal=0;
     }
     free(allocated);
     free(vOrdem);
