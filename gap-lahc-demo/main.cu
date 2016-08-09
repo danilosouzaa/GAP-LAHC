@@ -13,7 +13,7 @@
 
 
 int main(){
-	const char *fileName = "a05100";
+	const char *fileName = "a05200";
 
 	int deviceCount = 0;
 	//int i;
@@ -53,6 +53,11 @@ int main(){
 	showSolution(sol,inst);
 	printf("greedy solution ok!\n");
 	getchar();
+	srand(time(NULL));
+	//for(int i=0;i<=10;i++){
+		//schc_cpu(sol, inst, 50);
+	//}
+	//getchar();
 
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
@@ -61,8 +66,9 @@ int main(){
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
+
 	cudaEventRecord(start);
-	SCHC<<<1,2>>>(d_instance,d_solution, time(NULL), states, 200);
+	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states, 100);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;

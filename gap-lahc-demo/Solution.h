@@ -28,6 +28,8 @@ void showSolution(Solution *sol, Instance *inst);
 
 Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents);
 
+void schc_cpu(Solution *sol, Instance *inst, int L_c);
+
 EXTERN_C_END
 
 #endif
