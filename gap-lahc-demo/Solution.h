@@ -12,14 +12,14 @@
 EXTERN_C_BEGIN
 typedef int TcostFinal;
 typedef int Texcess;
-typedef int Ts;
-typedef int TresUsage;
+typedef short int Ts;
+typedef short int TresUsage;
 
 typedef struct{
-	int costFinal;
-	int excess;
-    int *s;
-    int *resUsage;
+	TcostFinal costFinal;
+	Texcess excess;
+    Ts *s;
+    TresUsage *resUsage;
 }Solution;
 
 Solution* allocationPointersSolution(Instance *inst);

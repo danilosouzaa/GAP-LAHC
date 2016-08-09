@@ -40,7 +40,7 @@ int main(){
 	Instance *d_instance;
 	Solution *d_solution;
 	curandState_t* states;
-	cudaMalloc((void**) &states, 2 * sizeof(curandState_t));
+	cudaMalloc((void**) &states, 10 * sizeof(curandState_t));
 
 
 	Instance *inst = loadInstance(fileName);
@@ -61,8 +61,7 @@ int main(){
 	cudaEventCreate(&stop);
 
 	cudaEventRecord(start);
-	for(int i=0;i<10;i++)
-		SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states,1000);
+	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states,1000);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;

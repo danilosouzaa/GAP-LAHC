@@ -12,9 +12,9 @@ EXTERN_C_BEGIN
 
 typedef int TnJobs;
 typedef int TmAgents;
-typedef int Tcost;
-typedef int TresourcesAgent;
-typedef int Tcapacity;
+typedef short int Tcost;
+typedef short int TresourcesAgent;
+typedef short int Tcapacity;
 
 typedef struct{
 	  TnJobs nJobs; /* number of jobs */
