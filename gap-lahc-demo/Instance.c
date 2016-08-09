@@ -23,7 +23,8 @@ Instance* allocationPointersInstance(int n, int m){
 Instance* loadInstance(const char *fileName){
 	 	FILE *arq;
 	    char ch;
-	    int m,n, cont=0, i,j, aux,a;
+	    int m,n, cont=0, i,j,a;
+	    short int aux;
 	    Instance *inst;
 	    arq=fopen(fileName, "r");
 	    if(arq==NULL)
@@ -41,7 +42,7 @@ Instance* loadInstance(const char *fileName){
 	        {
 	            for(j=0; j<n; j++)
 	            {
-	                a = fscanf(arq,"%d", &aux);
+	                a = fscanf(arq,"%hi", &aux);
 	                inst->cost[iReturn(j,i,n,m)]=aux;
 	            }
 	        }
@@ -51,13 +52,13 @@ Instance* loadInstance(const char *fileName){
 	        {
 	            for(j=0; j<n; j++)
 	            {
-	                a = fscanf(arq,"%d", &aux);
+	                a = fscanf(arq,"%hi", &aux);
 	                inst->resourcesAgent[iReturn(j,i,n,m)]=aux;
 	            }
 	        }
 	        for(j=0; j<m; j++)
 	        {
-	            a = fscanf(arq,"%d", &aux);
+	            a = fscanf(arq,"%hi", &aux);
 	            inst->capacity[j]=aux;
 	        }
 
@@ -75,20 +76,20 @@ void showInstance(Instance *inst){
     {
        for(i=0; i< inst->nJobs; i++)
         {
-            printf("Cost of job %d allocated the agent %d: %d \n",i+1,j+1,inst->cost[iReturn(i,j,inst->nJobs,inst->mAgents)]);
+            printf("Cost of job %d allocated the agent %d: %hi \n",i+1,j+1,inst->cost[iReturn(i,j,inst->nJobs,inst->mAgents)]);
         }
     }
     for(j=0; j<inst->mAgents; j++)
     {
         for(i=0; i< inst->nJobs; i++)
         {
-            printf("Amount of resource of job %d consumes by the agent %d: %d \n", i+1 ,j+1,inst->resourcesAgent[iReturn(i,j,inst->nJobs,inst->mAgents)]);
+            printf("Amount of resource of job %d consumes by the agent %d: %hi \n", i+1 ,j+1,inst->resourcesAgent[iReturn(i,j,inst->nJobs,inst->mAgents)]);
 
         }
     }
     for(j=0; j<inst->mAgents; j++)
     {
-        printf("Capacity of agent %d: %d\n",j+1,inst->capacity[j]);
+        printf("Capacity of agent %d: %hi\n",j+1,inst->capacity[j]);
     }
 }
 

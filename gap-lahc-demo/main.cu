@@ -44,6 +44,7 @@ int main(){
 
 
 	Instance *inst = loadInstance(fileName);
+	printf("teste\n");
 	Solution *sol = allocationPointersSolution(inst);
 	sol = guloso(inst,1,2);
 	showInstance(inst);
@@ -61,7 +62,7 @@ int main(){
 	cudaEventCreate(&stop);
 
 	cudaEventRecord(start);
-	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states,1000);
+	SCHC<<<1,2>>>(d_instance,d_solution, time(NULL), states, 200);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
