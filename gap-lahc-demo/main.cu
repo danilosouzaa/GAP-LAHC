@@ -69,6 +69,7 @@ int main(int argc, char *argv[]){
 
 	cudaEventRecord(start);
 	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states, 100);
+	gpuDeviceSynchronize();
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
