@@ -13,7 +13,7 @@
 
 
 int main(){
-	const char *fileName = "a05200";
+	const char *fileName = "a20200";
 
 	int deviceCount = 0;
 	//int i;
@@ -40,7 +40,7 @@ int main(){
 	Instance *d_instance;
 	Solution *d_solution;
 	curandState_t* states;
-	cudaMalloc((void**) &states, 10 * sizeof(curandState_t));
+	cudaMalloc((void**) &states, 20 * sizeof(curandState_t));
 
 
 	Instance *inst = loadInstance(fileName);
@@ -68,7 +68,7 @@ int main(){
 
 
 	cudaEventRecord(start);
-	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states, 100);
+	SCHC<<<1,20>>>(d_instance,d_solution, time(NULL), states, 100);
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
