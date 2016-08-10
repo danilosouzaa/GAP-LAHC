@@ -5,7 +5,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	int B_c;
 	int N_c;
 	int delta;
-	__shared__ Solution s[20];
+	__shared__ Solution s[10];
 	short int aux1;
 	short int aux2;
 	short int op;
