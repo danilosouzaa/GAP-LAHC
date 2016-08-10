@@ -13,8 +13,9 @@
 
 
 int main(int argc, char *argv[]){
+//int main(){
 	const char *fileName = argv[1];
-
+	//const char *fileName = "b05100";
 	int deviceCount = 0;
 	//int i;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
@@ -69,7 +70,7 @@ int main(int argc, char *argv[]){
 
 	cudaEventRecord(start);
 	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states, 100);
-	gpuDeviceSynchronize();
+
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;

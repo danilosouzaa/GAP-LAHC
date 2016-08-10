@@ -27,6 +27,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	N_c=0;
 	i=0;
 	while(i<=100000){
+		printf("i=%d\n",i);
 		op = curand(&states[threadIdx.x])%2;
 		//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 		//op = 1;
