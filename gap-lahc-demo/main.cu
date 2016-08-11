@@ -15,11 +15,10 @@
 int main(int argc, char *argv[]){
 //int main(){
 	const char *fileName = argv[1];
-	//const char *fileName = "b05100";
+	//const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
-
 	if (error_id != cudaSuccess)
 	{
 		printf("cudaGetDeviceCount returned %d\n-> %s\n", (int)error_id, cudaGetErrorString(error_id));
@@ -45,9 +44,13 @@ int main(int argc, char *argv[]){
 
 
 	Instance *inst = loadInstance(fileName);
-	printf("teste\n");
 	Solution *sol = allocationPointersSolution(inst);
-	sol = guloso(inst,1,2);
+	if(fileName[0]=='e'){
+		sol = guloso(inst,1,20);
+	}else{
+		sol = guloso(inst,1,2);
+	}
+
 	showInstance(inst);
 	printf("Load data instance ok!\n");
 	getchar();
