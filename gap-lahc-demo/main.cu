@@ -14,7 +14,6 @@
 #include "guloso.h"
 
 const int nThreads = 200;
-
 //int main(int argc, char *argv[]){
 int main(){
 	struct timeval inicio;
