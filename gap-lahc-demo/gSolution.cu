@@ -1,78 +1,74 @@
 #include "gSolution.cuh"
 
-
+const int nThreads = 10;
 __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandState_t* states, int L_c){
 	int B_c;
-	int N_c;
-	int delta;
-	__shared__ Solution s[10];
-	short int aux1;
-	short int aux2;
-	short int op;
-	int i;
-	curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
+		int N_c=0;
+		int delta;
+		__shared__ Solution s[nThreads];
+		short int aux1;
+		short int aux2;
+		short int op;
+		int i,j;
 
-	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
-	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
+		s[threadIdx.x].s = (short int*) malloc(sizeof(short int)*inst->nJobs);
+		s[threadIdx.x].resUsage = (short int*) malloc(sizeof(short int)*inst->mAgents);
+		s[threadIdx.x].costFinal = sol->costFinal;
 
-	s[threadIdx.x].costFinal = sol->costFinal;
-	for(i=0;i<inst->nJobs;i++){
-		s[threadIdx.x].s[i] = sol->s[i];
-	}
-	for(i=0;i<inst->mAgents;i++){
-		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
-	}
-
-	B_c = sol->costFinal;
-	N_c=0;
-	i=0;
-	while(i<=100000){
-		op = curand(&states[threadIdx.x])%2;
-		//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
-
-		if(op == 1){
-			do{
-				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
-				aux2 = curand(&states[threadIdx.x])%inst->mAgents;
-				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-			}while((s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] > inst->capacity[aux2])||
-					(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]));
-		}else{
-			do{
-				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
-				do{
-					aux2 = curand(&states[threadIdx.x])%inst->nJobs;
-				}while(aux1==aux2);
-				delta =  inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux2]] + inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux1]]- inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux2]];
-			}while((s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux1]]>inst->capacity[s[threadIdx.x].s[aux1]])
-					||(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux2]] +  inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]]> inst->capacity[s[threadIdx.x].s[aux2]]));
+		for (i=0;i<inst->nJobs;i++){
+			s[threadIdx.x].s[i]=sol->s[i];
 		}
-
-		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal+delta <= s[threadIdx.x].costFinal)){
-			s[threadIdx.x].costFinal += delta;
+		for(j=0;j<inst->mAgents;j++){
+			s[threadIdx.x].resUsage[j]=sol->resUsage[j];
+		}
+		i=0;
+		B_c = s[threadIdx.x].costFinal;
+		while(i<1000){
+			curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
+			op = curand(&states[threadIdx.x])%2;
 			if(op==1){
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] -= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1] ];
-				s[threadIdx.x].resUsage[aux2] += inst->resourcesAgent[aux1*inst->mAgents + aux2];
-				s[threadIdx.x].s[aux1] = aux2;
-			}else{
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]-= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]+= inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux1]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]]-= inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux2]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]]+= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]];
-				delta = s[threadIdx.x].s[aux1];
-				s[threadIdx.x].s[aux1] = s[threadIdx.x].s[aux2];
-				s[threadIdx.x].s[aux2] = delta;
-			}
-		}
-		N_c++;
-		if(N_c >= L_c){
-			B_c = s[threadIdx.x].costFinal;
-			N_c = 0;
-		}
-		i++;
-	}
+				do{
+					aux1=curand(&states[threadIdx.x])%inst->nJobs;
+					aux2=curand(&states[threadIdx.x])%inst->mAgents;
+					delta =  inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
 
-	printf("Custo final: %d\n", s[threadIdx.x].costFinal);
+				}while(s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents + aux2] > inst->capacity[aux2]);
+			}else{
+				do{
+					aux1=curand(&states[threadIdx.x])%inst->nJobs;
+					do{
+						aux2=curand(&states[threadIdx.x])%inst->nJobs;
+					}while(aux1==aux2);
+					delta = inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux2]] + inst->cost[aux2*inst->mAgents+s[threadIdx.x].s[aux1]] - inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] - inst->cost[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
+				}while((s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]])
+					||(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]]> inst->capacity[s[threadIdx.x].s[aux2]]));
+			}
+			if((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal + delta <= s[threadIdx.x].costFinal)){
+				s[threadIdx.x].costFinal = s[threadIdx.x].costFinal + delta;
+				if(op==1){
+					s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]-= inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
+					s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]+= inst->resourcesAgent[aux1*inst->mAgents+aux2];
+					s[threadIdx.x].s[aux1]=aux2;
+				}else{
+					s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]-= inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
+					s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]+= inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux1]];
+					s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]]-= inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
+					s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]]+= inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]];
+					delta=s[threadIdx.x].s[aux1];
+					s[threadIdx.x].s[aux1]=s[threadIdx.x].s[aux2];
+					s[threadIdx.x].s[aux2]=s[threadIdx.x].s[aux1];
+				}
+			}
+			N_c++;
+			if(N_c>=L_c){
+				B_c = s[threadIdx.x].costFinal;
+				N_c = 0;
+			}
+			i++;
+			printf("%d\n",i);
+
+		}
+		printf("custo final: %d\n",s[threadIdx.x].costFinal);
 
 }
 

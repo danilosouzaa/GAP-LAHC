@@ -47,8 +47,7 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c){
 	}
 	i=0;
 	B_c = s->costFinal;
-	printf("teste value:%d\n", sol->s[1]);
-	while(i<1000000){
+	while(i<600000){
 		op=rand()%2;
 		if(op==1){
 			do{
@@ -89,9 +88,10 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c){
 			N_c = 0;
 		}
 		i++;
+		printf("%d\n",i);
 
 	}
 	printf("custo final: %d\n",s->costFinal);
-	printf("teste pos value:%d\n", sol->s[1]);
+
 
 }

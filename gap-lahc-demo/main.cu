@@ -11,11 +11,12 @@
 #include "gSolution.cuh"
 #include "guloso.h"
 
+const int nThreads = 10;
 
-int main(int argc, char *argv[]){
-//int main(){
-	const char *fileName = argv[1];
-	//const char *fileName = "a05100";
+//int main(int argc, char *argv[]){
+int main(){
+	//const char *fileName = argv[1];
+	const char *fileName = "d05100";
 	int deviceCount = 0;
 	//int i;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]){
 	Instance *d_instance;
 	Solution *d_solution;
 	curandState_t* states;
-	cudaMalloc((void**) &states, 10 * sizeof(curandState_t));
+	cudaMalloc((void**) &states, nThreads * sizeof(curandState_t));
 
 
 	Instance *inst = loadInstance(fileName);
@@ -66,13 +67,16 @@ int main(int argc, char *argv[]){
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
 
+
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
-
+	printf("teste\n");
+	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
-	SCHC<<<1,10>>>(d_instance,d_solution, time(NULL), states, 100);
+
+	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL), states, 100);
 
 	cudaEventRecord(stop);
 
