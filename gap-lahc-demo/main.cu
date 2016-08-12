@@ -72,7 +72,6 @@ int main(){
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
-	printf("teste\n");
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
 

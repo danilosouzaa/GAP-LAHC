@@ -5,6 +5,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	int B_c;
 		int N_c=0;
 		int delta;
+		int cont=0;
 		__shared__ Solution s[nThreads];
 		short int aux1;
 		short int aux2;
@@ -23,7 +24,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 		}
 		i=0;
 		B_c = s[threadIdx.x].costFinal;
-		while(i<1000){
+		while(i<600000){
 			curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
 			op = curand(&states[threadIdx.x])%2;
 			if(op==1){
@@ -31,7 +32,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 					aux1=curand(&states[threadIdx.x])%inst->nJobs;
 					aux2=curand(&states[threadIdx.x])%inst->mAgents;
 					delta =  inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
-
+					cont++;
+					if(cont==100){
+						delta = 100000;
+						break;
+					}
 				}while(s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents + aux2] > inst->capacity[aux2]);
 			}else{
 				do{
@@ -40,9 +45,15 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 						aux2=curand(&states[threadIdx.x])%inst->nJobs;
 					}while(aux1==aux2);
 					delta = inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux2]] + inst->cost[aux2*inst->mAgents+s[threadIdx.x].s[aux1]] - inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] - inst->cost[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
+					cont++;
+					if(cont==100){
+						delta = 100000;
+						break;
+					}
 				}while((s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]])
 					||(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]]> inst->capacity[s[threadIdx.x].s[aux2]]));
 			}
+			cont=0;
 			if((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal + delta <= s[threadIdx.x].costFinal)){
 				s[threadIdx.x].costFinal = s[threadIdx.x].costFinal + delta;
 				if(op==1){
