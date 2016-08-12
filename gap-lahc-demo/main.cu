@@ -13,7 +13,7 @@
 #include "gSolution.cuh"
 #include "guloso.h"
 
-const int nThreads = 10;
+const int nThreads = 200;
 
 int main(int argc, char *argv[]){
 //int main(){
