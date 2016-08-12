@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <curand.h>
 #include <curand_kernel.h>
+#include <sys/time.h>
+
 
 #include "gpulib/types.h"
 #include "gpulib/gpu.cuh"
@@ -13,10 +15,14 @@
 
 const int nThreads = 10;
 
-//int main(int argc, char *argv[]){
-int main(){
-	//const char *fileName = argv[1];
-	const char *fileName = "d05100";
+int main(int argc, char *argv[]){
+//int main(){
+
+	struct timeval inicio;
+	struct timeval fim;
+	int tmili;
+	const char *fileName = argv[1];
+	//const char *fileName = "d05100";
 	int deviceCount = 0;
 	//int i;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
@@ -60,7 +66,7 @@ int main(){
 	getchar();
 	srand(time(NULL));
 	//for(int i=0;i<=10;i++){
-		//schc_cpu(sol, inst, 50);
+	//schc_cpu(sol, inst, 50);
 	//}
 	//getchar();
 
@@ -71,18 +77,20 @@ int main(){
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
-
+	gettimeofday(&inicio, NULL);
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
 
 	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL), states, 100);
-
+	gpuDeviceSynchronize();
 	cudaEventRecord(stop);
 
 	float milliseconds = 0;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	printf("time: %.4fms\n", milliseconds);
-
+	gettimeofday(&fim, NULL);
+	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
+	printf("tempo: %d\n",tmili);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
 	free(inst);
