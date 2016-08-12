@@ -15,13 +15,13 @@
 
 const int nThreads = 200;
 
-int main(int argc, char *argv[]){
-//int main(){
+//int main(int argc, char *argv[]){
+int main(){
 	struct timeval inicio;
 	struct timeval fim;
 	int tmili;
-	const char *fileName = argv[1];
-	//const char *fileName = "d05100";
+	//const char *fileName = argv[1];
+	const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
