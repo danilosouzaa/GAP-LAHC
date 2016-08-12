@@ -11,11 +11,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	short int aux2;
 	short int op;
 	int i;
-
-
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
-
+	curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
 	s[threadIdx.x].costFinal = sol->costFinal;
 	for(i=0;i<inst->nJobs;i++){
 		s[threadIdx.x].s[i] = sol->s[i];
@@ -27,8 +25,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	B_c = sol->costFinal;
 	N_c=0;
 	i=0;
-	while(i<=100000){
-		curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
+	while(i<=15000){
+
 		op = curand(&states[threadIdx.x])%2;
 		//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 		//op = 1;
@@ -73,7 +71,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 		}
 		i++;
 	}
-
+	free(s[threadIdx.x].s);
+	free(s[threadIdx.x].resUsage);
 	printf("Custo final: %d\n", s[threadIdx.x].costFinal);
 
 }
