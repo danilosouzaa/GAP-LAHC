@@ -17,7 +17,6 @@ const int nThreads = 10;
 
 int main(int argc, char *argv[]){
 //int main(){
-
 	struct timeval inicio;
 	struct timeval fim;
 	int tmili;
