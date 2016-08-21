@@ -42,7 +42,7 @@ Instance* loadInstance(const char *fileName){
 	        {
 	            for(j=0; j<n; j++)
 	            {
-	                a = fscanf(arq,"%d", &aux);
+	                a = fscanf(arq,"%hi", &aux);
 	                inst->cost[iReturn(j,i,n,m)]=aux;
 	            }
 	        }
