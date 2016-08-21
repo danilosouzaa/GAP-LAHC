@@ -44,8 +44,8 @@ Instance* loadInstance(const char *fileName){
 	            for(j=0; j<n; j++)
 	            {
 	                a = fscanf(arq,"%d", &aux_2);
-			printf("%d ",inst->cost[iReturn(j,i,n,m)]);
 	                inst->cost[iReturn(j,i,n,m)]=aux_2;
+			printf("%d ",inst->cost[iReturn(j,i,n,m)]);
 	            }
 			getchar();
 	        }
