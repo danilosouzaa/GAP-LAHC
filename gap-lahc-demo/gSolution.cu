@@ -45,13 +45,14 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 			aux1 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux2 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux3 = curand(&states[threadIdx.x])%inst->nJobs;
-			delta = inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux2]]+ inst->cost[aux2*inst->mAgents +s[threadIdx.x].s[aux3]] - inst->cost[aux3*inst->mAgents + s[threadIdx.x].s[aux3]] + inst->cost[aux3*inst->mAgents +s[threadIdx.x].s[aux1]] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
+			delta = inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->cost[aux2*inst->mAgents +s[threadIdx.x].s[aux3]] + inst->cost[aux3*inst->mAgents +s[threadIdx.x].s[aux1]]  - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux2]] - inst->cost[aux3*inst->mAgents + s[threadIdx.x].s[aux3]] ;
 			}while(
-(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]] > inst->capacity[s[threadIdx.x].s[aux2]]) 
-|| 
-(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] > inst->capacity[s[threadIdx.x].s[aux3]]) 
-|| 
-(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]) );
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]]>inst->capacity[s[threadIdx.x].s[aux1]])
+||
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]]>inst->capacity[s[threadIdx.x].s[aux2]])
+||
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]]>inst->capacity[s[threadIdx.x].s[aux3]])
+ );
 		}
 
 		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal + delta <= s[threadIdx.x].costFinal)){
@@ -61,9 +62,12 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 				s[threadIdx.x].resUsage[aux2] += inst->resourcesAgent[aux1*inst->mAgents + aux2];
 				s[threadIdx.x].s[aux1] = aux2;
 			}else{
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] +=  inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] += inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] +=  inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] += inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] -= inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux2]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] += inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] -= inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux3]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] += inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]]; 
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] += inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
 				aux = s[threadIdx.x].s[aux1];
 				s[threadIdx.x].s[aux1] = s[threadIdx.x].s[aux2];
 				s[threadIdx.x].s[aux2] = s[threadIdx.x].s[aux3];
