@@ -23,7 +23,7 @@ Instance* allocationPointersInstance(int n, int m){
 Instance* loadInstance(const char *fileName){
 	 	FILE *arq;
 	    char ch;
-	    int m,n, cont=0, i,j,a,b;
+	    int m,n, cont=0, i,j,a;
 	    short int aux;
 	    Instance *inst;
 	    arq=fopen(fileName, "r");
@@ -42,8 +42,8 @@ Instance* loadInstance(const char *fileName){
 	        {
 	            for(j=0; j<n; j++)
 	            {
-	                a = fscanf(arq,"%d", &b);
-	                inst->cost[iReturn(j,i,n,m)]=b;
+	                a = fscanf(arq,"%d", &aux);
+	                inst->cost[iReturn(j,i,n,m)]=aux;
 	            }
 	        }
 
