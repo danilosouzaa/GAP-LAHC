@@ -67,7 +67,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] += inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]];
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] -= inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux3]];
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] += inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]]; 
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] += inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] -= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
 				aux = s[threadIdx.x].s[aux1];
 				s[threadIdx.x].s[aux1] = s[threadIdx.x].s[aux2];
 				s[threadIdx.x].s[aux2] = s[threadIdx.x].s[aux3];
