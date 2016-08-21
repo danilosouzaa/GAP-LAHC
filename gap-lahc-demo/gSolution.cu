@@ -85,6 +85,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	if(threadIdx.x < 1){
 		c_min = s[threadIdx.x].costFinal;	
 	}
+	if(s[threadIdx.x].costFinal<c_min){
+		c_min = s[threadIdx.x].costFinal;	
+	}
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
 	printf("%d - %d\n", c_min, s[threadIdx.x].costFinal);
