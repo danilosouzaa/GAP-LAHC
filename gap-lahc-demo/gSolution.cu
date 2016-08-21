@@ -30,12 +30,12 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	i=0;
 	while(i<=60000){
 
-		//op = curand(&states[threadIdx.x])%2;
+		op = curand(&states[threadIdx.x])%2;
 		//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
-		delta=0;
-		op = 0;
+		
+		//op = 0;
 		if(op == 1){
-			do{
+			do{	delta=0;
 				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
 				aux2 = curand(&states[threadIdx.x])%inst->mAgents;
 				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
@@ -43,6 +43,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 					(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]));
 		}else{	
 			do{
+			delta=0;
 			aux1 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux2 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux3 = curand(&states[threadIdx.x])%inst->nJobs;
