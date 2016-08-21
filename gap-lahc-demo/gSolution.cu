@@ -8,7 +8,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	int delta;
 	int aux;
 	__shared__ Solution s[nThreads];
-	__shared__ int c_min = INT_MAX;
+	__shared__ int c_min = 999999;
 	short int aux1;
 	short int aux2;
 	short int aux3;
@@ -84,7 +84,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	}
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
-	printf("%d\n", s[threadIdx.x].costFinal);
+	if(s[threadIdx.x].costFinal<c_min)
+		c_min = s[threadIdx.x].costFinal;
+	if(threadIdx.x==nThread-1)
+		printf("Menor Custo:%d\n", c_min);
 
 }
 
