@@ -49,16 +49,16 @@ int main(int argc, char *argv[]){
 
 
 	Instance *inst = loadInstance(fileName);
+	showInstance(inst);
+	printf("Load data instance ok!\n");
+	getchar();
+
 	Solution *sol = allocationPointersSolution(inst);
 	if(fileName[0]=='e'){
 		sol = guloso(inst,1,20);
 	}else{
 		sol = guloso(inst,1,2);
 	}
-
-	showInstance(inst);
-	printf("Load data instance ok!\n");
-	getchar();
 	showSolution(sol,inst);
 	printf("greedy solution ok!\n");
 	getchar();
