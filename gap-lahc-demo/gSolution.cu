@@ -8,12 +8,13 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	int delta;
 	int aux;
 	__shared__ Solution s[nThreads];
-	__shared__ int c_min = 999999;
+	__shared__ int c_min;
 	short int aux1;
 	short int aux2;
 	short int aux3;
 	short int op;
 	int i;
+	
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
 	curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
@@ -84,9 +85,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	}
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
+	if(threadIdx.x == 0)
+	 	c_min = s[threadIdx.x].costFinal;
 	if(s[threadIdx.x].costFinal<c_min)
 		c_min = s[threadIdx.x].costFinal;
-	if(threadIdx.x==nThread-1)
+	if(threadIdx.x==nThreads-1)
 		printf("Menor Custo:%d\n", c_min);
 
 }
