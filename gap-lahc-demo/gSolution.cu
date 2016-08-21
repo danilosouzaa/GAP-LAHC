@@ -42,7 +42,12 @@ const int nThreads =1024;
 			aux2 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux3 = curand(&states[threadIdx.x])%inst->nJobs;
 			delta = inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux2]]+ inst->cost[aux2*inst->mAgents +s[threadIdx.x].s[aux3]] - inst->cost[aux3*inst->mAgents + s[threadIdx.x].s[aux3]] + inst->cost[aux3*inst->mAgents +s[threadIdx.x].s[aux1]] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-			}while((s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] > inst->capacity[s[threadIdx.x].s[aux2]]) || (s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] -inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] > inst->capacity[s[threadIdx.x].s[aux3]]) || (s[threadIdx.x]resUsage[s[threadIdx.x].s[aux1]] -inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]));
+			}while(
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] > inst->capacity[s[threadIdx.x].s[aux2]]) 
+|| 
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] -inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] > inst->capacity[s[threadIdx.x].s[aux3]]) 
+|| 
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]) );
 		}
 
 		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal+delta <= s[threadIdx.x].costFinal)){
@@ -54,7 +59,7 @@ const int nThreads =1024;
 			}else{
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] +=  inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] += inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]];
-				s[threadIdx.x]resUsage[s[threadIdx.x].s[aux1]] +=  inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] +=  inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
 				delta = s[threadIdx.x].s[aux1];
 				s[threadIdx.x].s[aux1] = s[threadIdx.x].s[aux2];
 				s[threadIdx.x].s[aux2] = s[threadIdx.x].s[aux3];
