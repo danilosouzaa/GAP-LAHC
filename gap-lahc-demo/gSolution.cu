@@ -90,7 +90,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	}
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
-	printf("%d - %d\n", c_min, s[threadIdx.x].costFinal);
+	printf("\n%d\n", c_min);
 
 }
 
