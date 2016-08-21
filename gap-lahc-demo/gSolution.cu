@@ -8,6 +8,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	int delta;
 	int aux;
 	__shared__ Solution s[nThreads];
+	__shared__ int c_min = INT_MAX;
 	short int aux1;
 	short int aux2;
 	short int aux3;

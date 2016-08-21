@@ -9,6 +9,7 @@ extern "C" {
 
 #include "Instance.h"
 #include "Solution.h"
+#include <limits.h>
 
 }
 
