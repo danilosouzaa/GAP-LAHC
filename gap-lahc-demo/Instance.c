@@ -23,7 +23,7 @@ Instance* allocationPointersInstance(int n, int m){
 Instance* loadInstance(const char *fileName){
 	 	FILE *arq;
 	    char ch;
-	    int m,n, cont=0, i,j,a;
+	    int m,n, cont=0, i,j,a,b;
 	    short int aux;
 	    Instance *inst;
 	    arq=fopen(fileName, "r");
@@ -42,8 +42,8 @@ Instance* loadInstance(const char *fileName){
 	        {
 	            for(j=0; j<n; j++)
 	            {
-	                a = fscanf(arq,"%hi", &aux);
-	                inst->cost[iReturn(j,i,n,m)]=aux;
+	                a = fscanf(arq,"%d", &b);
+	                inst->cost[iReturn(j,i,n,m)]=b;
 	            }
 	        }
 
@@ -76,7 +76,7 @@ void showInstance(Instance *inst){
     {
        for(i=0; i< inst->nJobs; i++)
         {
-            printf("Cost of job %d allocated the agent %d: %hi \n",i+1,j+1,inst->cost[iReturn(i,j,inst->nJobs,inst->mAgents)]);
+            printf("Cost of job %d allocated the agent %d: %d \n",i+1,j+1,inst->cost[iReturn(i,j,inst->nJobs,inst->mAgents)]);
         }
     }
     for(j=0; j<inst->mAgents; j++)

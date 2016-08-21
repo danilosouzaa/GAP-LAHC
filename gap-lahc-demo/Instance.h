@@ -12,7 +12,7 @@ EXTERN_C_BEGIN
 
 typedef int TnJobs;
 typedef int TmAgents;
-typedef short int Tcost;
+typedef int Tcost;
 typedef short int TresourcesAgent;
 typedef short int Tcapacity;
 
