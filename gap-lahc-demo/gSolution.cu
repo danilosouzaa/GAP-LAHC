@@ -8,6 +8,7 @@ const int nThreads =1024;
 	__shared__ Solution s[nThreads];
 	short int aux1;
 	short int aux2;
+	short int aux3;
 	short int op;
 	int i;
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
@@ -37,14 +38,11 @@ const int nThreads =1024;
 			}while((s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] > inst->capacity[aux2])||
 					(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]));
 		}else{
-			do{
-				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
-				do{
-					aux2 = curand(&states[threadIdx.x])%inst->nJobs;
-				}while(aux1==aux2);
-				delta =  inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux2]] + inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux1]]- inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux2]];
-			}while((s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux1]]>inst->capacity[s[threadIdx.x].s[aux1]])
-					||(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux2]] +  inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]]> inst->capacity[s[threadIdx.x].s[aux2]]));
+			aux1 = curand(&states[threadIdx.x])%inst->nJobs;
+			aux2 = curand(&states[threadIdx.x])%inst->nJobs;
+			aux3 = curand(&states[threadIdx.x])%inst->nJobs;
+			delta = inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->cost[aux2*inst->mAgents + s[threadIdx.x].s[aux2]]+ inst->cost[aux2*inst->mAgent +s[threadIdx.x].s[aux3]] - inst->cost[aux3*inst->mAgent + s[threadIdx.x].s[aux3]] + inst->cost[aux3*inst->mAgent +s[threadIdx.x].s[aux1]] - inst->cost[aux1*inst->mAgent + s[threadIdx.x].s[aux1]];
+			}while((s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] > inst->capacity[s[threadIdx.x].s[aux2]]) || (s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] -inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] > inst->capacity[s[threadIdx.x].s[aux3]]) || (s[threadIdx.x]resUsage[s[threadIdx.x].s[aux1]] -inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]));
 		}
 
 		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal+delta <= s[threadIdx.x].costFinal)){
@@ -54,13 +52,13 @@ const int nThreads =1024;
 				s[threadIdx.x].resUsage[aux2] += inst->resourcesAgent[aux1*inst->mAgents + aux2];
 				s[threadIdx.x].s[aux1] = aux2;
 			}else{
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]-= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]]+= inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux1]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]]-= inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux2]];
-				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]]+= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux2]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] +=  inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
+				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] += inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]];
+				s[threadIdx.x]resUsage[s[threadIdx.x].s[aux1]] +=  inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
 				delta = s[threadIdx.x].s[aux1];
 				s[threadIdx.x].s[aux1] = s[threadIdx.x].s[aux2];
-				s[threadIdx.x].s[aux2] = delta;
+				s[threadIdx.x].s[aux2] = s[threadIdx.x].s[aux3];
+				s[threadIdx.x].s[aux3] = delta;
 			}
 		}
 		N_c++;
