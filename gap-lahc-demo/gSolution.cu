@@ -1,7 +1,8 @@
 #include "gSolution.cuh"
 
 const int nThreads =1024;
-	__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandState_t* states, int L_c){
+
+__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandState_t* states, int L_c){
 	int B_c;
 	int N_c;
 	int delta;
@@ -37,7 +38,8 @@ const int nThreads =1024;
 				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
 			}while((s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] > inst->capacity[aux2])||
 					(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]));
-		}else{
+		}else{	
+			do{
 			aux1 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux2 = curand(&states[threadIdx.x])%inst->nJobs;
 			aux3 = curand(&states[threadIdx.x])%inst->nJobs;
