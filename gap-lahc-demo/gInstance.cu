@@ -12,17 +12,17 @@ Instance* createGPUInstance(const Instance* h_instance, TnJobs nJobs, TmAgents m
 	Instance* d_inst;
 	gpuMalloc((void**)&d_inst, size_instance);
 	printf("malloc ok");
-	getchar();
+	//getchar();
 	gpuMemset(d_inst,0,size_instance);
 	printf("menset ok");
-	getchar();
+	//getchar();
 
 	h_inst_gpu->cost = (Tcost*)(d_inst +1);
 	h_inst_gpu->resourcesAgent = (TresourcesAgent*) (h_inst_gpu->cost + (nJobs*mAgents));
 	h_inst_gpu->capacity = (Tcapacity*) (h_inst_gpu->resourcesAgent + (nJobs*mAgents) );
 
 	printf("adjusting GPU pointers");
-	getchar();
+	//getchar();
 
 	h_inst_gpu->nJobs = nJobs;
 	h_inst_gpu->mAgents = mAgents;

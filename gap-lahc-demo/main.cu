@@ -13,14 +13,14 @@
 #include "gSolution.cuh"
 #include "guloso.h"
 
-const int nThreads = 200;
-//int main(int argc, char *argv[]){
-int main(){
+const int nThreads = 1024;
+int main(int argc, char *argv[]){
+//int main(){
 	struct timeval inicio;
 	struct timeval fim;
 	int tmili;
-	//const char *fileName = argv[1];
-	const char *fileName = "a05100";
+	const char *fileName = argv[1];
+	//const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
@@ -56,12 +56,12 @@ int main(){
 		sol = guloso(inst,1,2);
 	}
 
-	showInstance(inst);
+	//showInstance(inst);
 	printf("Load data instance ok!\n");
-	getchar();
-	showSolution(sol,inst);
+
+	//showSolution(sol,inst);
 	printf("greedy solution ok!\n");
-	getchar();
+
 	srand(time(NULL));
 	//for(int i=0;i<=10;i++){
 	//schc_cpu(sol, inst, 50);

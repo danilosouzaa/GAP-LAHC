@@ -1,8 +1,7 @@
 #include "gSolution.cuh"
 
-const int nThreads = 200;
-
-__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandState_t* states, int L_c){
+const int nThreads =1024;
+	__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandState_t* states, int L_c){
 	int B_c;
 	int N_c;
 	int delta;
@@ -25,11 +24,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	B_c = sol->costFinal;
 	N_c=0;
 	i=0;
-	while(i<=15000){
+	while(i<=40000){
 
-		op = curand(&states[threadIdx.x])%2;
+		//op = curand(&states[threadIdx.x])%2;
 		//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
-		//op = 1;
+		op = 1;
 		if(op == 1){
 			do{
 				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
@@ -73,7 +72,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	}
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
-	printf("Custo final: %d\n", s[threadIdx.x].costFinal);
+	printf("%d\n", s[threadIdx.x].costFinal);
 
 }
 
@@ -87,21 +86,21 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
 	Solution *d_sol;
 	gpuMalloc((void**)&d_sol, size_solution);
 	printf("malloc solution ok!");
-	getchar();
+	//getchar();
 	gpuMemset(d_sol,0,size_solution);
 	printf("memset Solution ok!");
-	getchar();
+	//getchar();
 
 	h_solution->s = (Ts*)(d_sol+1);
 	h_solution->resUsage = (TresUsage*)(h_solution->s + nJobs);
 
 	printf("adjusting solution GPU pointers");
-	getchar();
+	//getchar();
 
 	gpuMemcpy(d_sol, h_solution, size_solution, cudaMemcpyHostToDevice);
 
 	printf("memcpy Solution ok!");
-	getchar();
+	//getchar();
 
 	return d_sol;
 
