@@ -46,10 +46,9 @@ Instance* loadInstance(const char *fileName){
 	                a = fscanf(arq,"%d", &aux_2);
 			
 	                inst->cost[iReturn(j,i,n,m)]=aux_2;
-			printf("%d ",inst->cost[iReturn(j,i,n,m)]);
 	            }
 	        }
-		getchar();
+
 
 
 	        for(i=0; i<m; i++)
@@ -87,13 +86,13 @@ void showInstance(Instance *inst){
     {
         for(i=0; i< inst->nJobs; i++)
         {
-            printf("Amount of resource of job %d consumes by the agent %d: %hi \n", i+1 ,j+1,inst->resourcesAgent[iReturn(i,j,inst->nJobs,inst->mAgents)]);
+           // printf("Amount of resource of job %d consumes by the agent %d: %hi \n", i+1 ,j+1,inst->resourcesAgent[iReturn(i,j,inst->nJobs,inst->mAgents)]);
 
         }
     }
     for(j=0; j<inst->mAgents; j++)
     {
-        printf("Capacity of agent %d: %hi\n",j+1,inst->capacity[j]);
+       // printf("Capacity of agent %d: %hi\n",j+1,inst->capacity[j]);
     }
 }
 
