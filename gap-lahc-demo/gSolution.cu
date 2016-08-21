@@ -6,6 +6,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	int B_c;
 	int N_c;
 	int delta;
+	int aux;
 	__shared__ Solution s[nThreads];
 	short int aux1;
 	short int aux2;
@@ -47,12 +48,12 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 			}while(
 (s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] > inst->capacity[s[threadIdx.x].s[aux2]]) 
 || 
-(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] -inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] > inst->capacity[s[threadIdx.x].s[aux3]]) 
+(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] > inst->capacity[s[threadIdx.x].s[aux3]]) 
 || 
 (s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]) );
 		}
 
-		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal+delta <= s[threadIdx.x].costFinal)){
+		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal + delta <= s[threadIdx.x].costFinal)){
 			s[threadIdx.x].costFinal += delta;
 			if(op==1){
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] -= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1] ];
@@ -62,10 +63,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux2]] +=  inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->resourcesAgent[aux2*inst->mAgents+s[threadIdx.x].s[aux2]];
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux3]] += inst->resourcesAgent[aux2*inst->mAgents + s[threadIdx.x].s[aux3]] - inst->resourcesAgent[aux3*inst->mAgents+s[threadIdx.x].s[aux3]];
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] +=  inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents+s[threadIdx.x].s[aux1]];
-				delta = s[threadIdx.x].s[aux1];
+				aux = s[threadIdx.x].s[aux1];
 				s[threadIdx.x].s[aux1] = s[threadIdx.x].s[aux2];
 				s[threadIdx.x].s[aux2] = s[threadIdx.x].s[aux3];
-				s[threadIdx.x].s[aux3] = delta;
+				s[threadIdx.x].s[aux3] = aux;
 			}
 		}
 		N_c++;
