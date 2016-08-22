@@ -13,8 +13,8 @@ Instance* allocationPointersInstance(int n, int m){
 	assert(inst!=NULL);
 	memset(inst,0,size_instance);
 	inst->cost = (Tcost*)(inst+1);
-	inst->resourcesAgent =(TresourcesAgent*) inst->cost +(n*m);
-	inst->capacity =(Tcapacity*) inst->resourcesAgent + (n*m);
+	inst->resourcesAgent =(TresourcesAgent*) (inst->cost +(n*m));
+	inst->capacity =(Tcapacity*) (inst->resourcesAgent + (n*m));
 	inst->nJobs = n;
 	inst->mAgents = m;
 	return inst;
