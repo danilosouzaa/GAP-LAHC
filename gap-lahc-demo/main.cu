@@ -49,9 +49,9 @@ int main(int argc, char *argv[]){
 
 
 	Instance *inst = loadInstance(fileName);
-	showInstance(inst);
+	//showInstance(inst);
 	printf("Load data instance ok!\n");
-	getchar();
+
 
 	Solution *sol = allocationPointersSolution(inst);
 	if(fileName[0]=='e'){
@@ -59,9 +59,9 @@ int main(int argc, char *argv[]){
 	}else{
 		sol = guloso(inst,1,2);
 	}
-	showSolution(sol,inst);
+	//showSolution(sol,inst);
 	printf("greedy solution ok!\n");
-	getchar();
+	
 	srand(time(NULL));
 	//for(int i=0;i<=10;i++){
 	//schc_cpu(sol, inst, 50);
