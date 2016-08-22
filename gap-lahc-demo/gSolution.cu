@@ -30,10 +30,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	i=0;
 	while(i<=60000){
 
-		op = curand(&states[threadIdx.x])%2;
+		//op = curand(&states[threadIdx.x])%2;
 		//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 		
-		//op = 0;
+		op = 0;
 		if(op == 1){
 			do{	delta=0;
 				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
