@@ -83,6 +83,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 		}
 		i++;
 	}
+	printf("\n%d", s[threadIdx.x].costFinal);
 	if(threadIdx.x < 1){
 		c_min = s[threadIdx.x].costFinal;
 		for(i=0;i<nThreads;i++){
@@ -94,7 +95,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 	
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
-	printf("\n%d", s[threadIdx.x].costFinal);
+	
 	if(threadIdx.x <1 ){
 		printf("\ntestes: %d\n", c_min);
 	}
