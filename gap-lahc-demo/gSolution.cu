@@ -44,9 +44,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 		}else{	
 			do{
 			delta=0;
-			aux1 = curand(&states[threadIdx.x])%inst->nJobs;
-			aux2 = curand(&states[threadIdx.x])%inst->nJobs;
-			aux3 = curand(&states[threadIdx.x])%inst->nJobs;
+			do{
+				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
+				aux2 = curand(&states[threadIdx.x])%inst->nJobs;
+				aux3 = curand(&states[threadIdx.x])%inst->nJobs;
+			}while((aux1==aux2)||(aux2==aux3)||(aux1==aux3));
 			delta = inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux2]] + inst->cost[aux2*inst->mAgents+s[threadIdx.x].s[aux3]] + inst->cost[aux3*inst->mAgents+s[threadIdx.x].s[aux1]]  - inst->cost[aux1*inst->mAgents+s[threadIdx.x].s[aux1]] - inst->cost[aux2*inst->mAgents+s[threadIdx.x].s[aux2]] - inst->cost[aux3*inst->mAgents+s[threadIdx.x].s[aux3]];
 			}while(
 (s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] + inst->resourcesAgent[aux3*inst->mAgents + s[threadIdx.x].s[aux1]]>inst->capacity[s[threadIdx.x].s[aux1]])
