@@ -16,7 +16,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     short int aux_p[10];
     short int op;
     short int t;
-    int i;
+    int i, ite;
     s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
     s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
     curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
@@ -32,8 +32,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 
     B_c = sol->costFinal;
     N_c=0;
-    i=0;
-    while(i<=15000)
+    ite=0;
+    while(ite<=15000)
     {
         do
         {
@@ -120,7 +120,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
             B_c = s[threadIdx.x].costFinal;
             N_c = 0;
         }
-        i++;
+        ite++;
     }
 
     if(threadIdx.x < 1)
