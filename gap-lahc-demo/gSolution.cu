@@ -75,7 +75,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                         if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
                         {
                             aux=0;
-                            break;
                         }
 
                     }
@@ -85,7 +84,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                         if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]]>inst->capacity[s[threadIdx.x].s[aux_p[i]]])
                         {
                             aux=0;
-                            break;
                         }
                     }
                 }
