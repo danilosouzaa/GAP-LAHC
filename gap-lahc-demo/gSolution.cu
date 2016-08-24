@@ -37,10 +37,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     {
         do
         {
-            op = curand(&states[threadIdx.x])%2;
+            //op = curand(&states[threadIdx.x])%2;
             //printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
             aux=0;
-            //op = 0;
+            op = 1;
             if(op == 1)
             {
                 delta=0;
