@@ -58,25 +58,25 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                 delta=0;
                 aux = 1;
                 t = curand(&states[threadIdx.x])%8 + 2;
-                aux_t[0] = curand(&states[threadIdx.x])%inst->nJobs;
-                delta -= inst->cost[ aux_t[0]*inst->mAgents+s[threadIdx.x].s[aux_t[0]]];
+                aux_p[0] = curand(&states[threadIdx.x])%inst->nJobs;
+                delta -= inst->cost[ aux_p[0]*inst->mAgents+s[threadIdx.x].s[aux_p[0]]];
                 for(i=1; i<=t; i++)
                 {
                     do
                     {
-                        aux_t[i] = curand(&states[threadIdx.x])%inst->nJobs;
-                        while((t==i)&&(s[threadIdx.x].s[aux_t[i]]==s[threadIdx.x].s[aux_t[0]]))
+                        aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
+                        while((t==i)&&(s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[0]]))
                         {
-                            aux_t[i] = curand(&states[threadIdx.x])%inst->nJobs;
+                            aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
                         }
                     }
-                    while(s[threadIdx.x].s[aux_t[i]]==s[threadIdx.x].s[aux_t[i-1]]);
-                    delta += inst->cost[aux_t[i-1]*inst->mAgents+s[threadIdx.x].s[aux_t[i]]];
-                    delta -= inst->cost[aux_t[i]*inst->mAgents+s[threadIdx.x].s[aux_t[i]]];
+                    while(s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]]);
+                    delta += inst->cost[aux_p[i-1]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
+                    delta -= inst->cost[aux_p[i]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
                     if(t==i)
                     {
-                        delta += inst->cost[aux_t[i]*inst->mAgents+s[threadIdx.x].s[aux_t[0]]];
-                        if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_t[0]]] - inst->resourcesAgent[aux_t[0]*inst->mAgents + s[threadIdx.x].s[aux_t[0]]] + inst->resourcesAgent[aux_t[i]*inst->mAgents + s[threadIdx.x].s[aux_t[0]]]>inst->capacity[s[threadIdx.x].s[aux_t[0]]])
+                        delta += inst->cost[aux_p[i]*inst->mAgents+s[threadIdx.x].s[aux_p[0]]];
+                        if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
                         {
                             aux=0;
                             break;
@@ -86,7 +86,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                     else
                     {
 
-                        if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_t[i]]] - inst->resourcesAgent[aux_t[i]*inst->mAgents + s[threadIdx.x].s[aux_t[i]]] + inst->resourcesAgent[aux_t[i-1]*inst->mAgents + s[threadIdx.x].s[aux_t[i]]]>inst->capacity[s[threadIdx.x].s[aux_t[i]]])
+                        if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]]>inst->capacity[s[threadIdx.x].s[aux_p[i]]])
                         {
                             aux=0;
                             break;
