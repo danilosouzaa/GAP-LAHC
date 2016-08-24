@@ -65,10 +65,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                     do
                     {
                         aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
-                        while((t==i)&&(s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[0]]))
-                        {
-                            aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
-                        }
                     }
                     while(s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]]);
                     delta += inst->cost[aux_p[i-1]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
