@@ -16,7 +16,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     short int aux_p[10];
     short int op;
     short int t;
-    int i, ite;
+    int i,j, ite, flag;
     s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
     s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
     curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
@@ -64,13 +64,20 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                 {
                     do
                     {
-                        aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
+			flag = 0;                        
+			aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
+			for(j=0;j<i;j++){
+			    if(aux_p[i]==aux_p[j]){
+				flag = 1;	
+				}		
+			}
 			while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]])){
 				aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
 			}
-                    }while(s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]]);
+                    }while((s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]])||(flag==1));
                     delta += inst->cost[aux_p[i-1]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
                     delta -= inst->cost[aux_p[i]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
+
                     if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]]>inst->capacity[s[threadIdx.x].s[aux_p[i]]])
                         {
                             aux=0;
