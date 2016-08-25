@@ -37,10 +37,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     {
         do
         {
-           op = curand(&states[threadIdx.x])%2;
+            op = curand(&states[threadIdx.x])%2;
             //printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
             aux=0;
-           // op = 1;
+            // op = 1;
             if(op == 1)
             {
                 delta=0;
@@ -64,31 +64,34 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
                 {
                     do
                     {
-			flag = 0;                        
-			aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
-			while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]])){
-				aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
-			}
-			for(j=0;j<i;j++){
-			    if(aux_p[i]==aux_p[j]){
-				flag = 1;	
-			    }		
-			}
-                    }while((s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]])||(flag==1));
+                        flag = 0;
+                        aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
+                        while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]]))
+                        {
+                            aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
+                        }
+                        for(j=0; j<i; j++)
+                        {
+                            if(aux_p[i]==aux_p[j])
+                            {
+                                flag = 1;
+                            }
+                        }
+                    } while((s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]])||(flag==1));
                     delta += inst->cost[aux_p[i-1]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
                     delta -= inst->cost[aux_p[i]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
 
                     if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]]>inst->capacity[s[threadIdx.x].s[aux_p[i]]])
-                        {
-                            aux=0;
-                        }
-             
+                    {
+                        aux=0;
+                    }
+
                 }
-		delta += inst->cost[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]];
-		if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
-                       {
-                            aux=0;
-                        }
+                delta += inst->cost[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]];
+                if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
+                {
+                    aux=0;
+                }
             }
         }
         while(aux==0);
