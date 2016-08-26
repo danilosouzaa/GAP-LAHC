@@ -9,7 +9,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     int delta;
     int aux;
     __shared__ Solution s[nThreads];
-    __shared__ int* rank;
+    __shared__ unsigned int* rank;
     int c_min;
     short int aux1;
     short int aux2;
@@ -18,7 +18,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     short int op;
     short int t;
     int i,j, ite, flag;
-    rank = (int*)malloc(sizeof(int)*inst->nJobs*inst->mAgents);
+    rank = (unsigned int*)malloc(sizeof(unsigned int)*inst->nJobs*inst->mAgents);
     if(threadIdx.x < 1){
     	for(i=0;i<inst->nJobs*inst->mAgents;i++){
     		rank[i]=0;
@@ -147,7 +147,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
             if(s[i].costFinal<c_min)
             {
                 c_min = s[i].costFinal;
-                sol.costFinal = s[i].costFinal;
+                sol->costFinal = s[i].costFinal;
                 for(j=0; j<inst->nJobs; j++)
                 {
                     sol->s[j] = s[i].s[j] ;
