@@ -13,7 +13,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     int c_min;
     short int aux1;
     short int aux2;
-    short int aux3;
+    //short int aux3;
     short int aux_p[10];
     short int op;
     short int t;
@@ -141,7 +141,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
         for(i=0; i<nThreads; i++)
         {
         	for(j=0;j<inst->nJobs;j++){
-        		atomicinc(&rank[j * inst->mAgents +s[i].s[j]]);
+        		atomicInc(&rank[j * inst->mAgents +s[i].s[j]],nThreads);
         	}
 
             if(s[i].costFinal<c_min)
