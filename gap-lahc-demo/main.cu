@@ -72,7 +72,6 @@ int main(int argc, char *argv[]){
 	//schc_cpu(sol, inst, 50);
 	//}
 	//getchar();
-	printf("teste\n");
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
 
@@ -100,11 +99,11 @@ int main(int argc, char *argv[]){
 	inst->cost = (Tcost*)(inst+1);
 	inst->resourcesAgent =(TresourcesAgent*) (inst->cost +(inst->nJobs*inst->mAgents));
 	inst->capacity =(Tcapacity*) (inst->resourcesAgent + (inst->nJobs*inst->mAgents));
-	printf("inst:%d\n", inst->nJobs);
+
 	//reallocation pointers of Solution
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
-	printf("Custo final:%d\n", sol->costFinal);
+
 	showSolution(sol,inst);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
