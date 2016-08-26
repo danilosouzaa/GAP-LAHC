@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 	//schc_cpu(sol, inst, 50);
 	//}
 	//getchar();
-
+	printf("inst:%d\n", inst->nJobs);
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
 
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 	gettimeofday(&inicio, NULL);
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
-	printf("inst:%d\n", inst->nJobs);
+
 	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL), states, 100);
 
 	cudaEventRecord(stop);
