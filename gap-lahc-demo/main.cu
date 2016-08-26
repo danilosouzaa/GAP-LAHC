@@ -74,16 +74,21 @@ int main(int argc, char *argv[]){
 	//getchar();
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
-
-
+	unsigned int *h_rank = (unsigned int*)malloc(sizeof(unsigned int)*inst->nJobs*inst->mAgents);
+	memset(h_rank,0,sizeof(unsigned int)*inst->nJobs*inst->mAgents);
+	unsigned int *d_rank;
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
+	gpuMalloc((void* ) &d_rank, sizeof(unsigned int)*inst->nJobs*inst->mAgents);
+	gpuMemcpy(d_rank, h_rank,sizeof(unsigned int)*inst->nJobs*inst->mAgents , cudaMemcpyHostToDevice);
+
+
 	gettimeofday(&inicio, NULL);
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
 
-	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL), states, 100);
+	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL),d_rank, states, 100);
 
 	cudaEventRecord(stop);
 

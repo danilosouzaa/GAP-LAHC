@@ -2,14 +2,14 @@
 
 const int nThreads =1024;
 
-__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandState_t* states, int L_c)
+__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned int *rank, curandState_t* states, int L_c)
 {
     int B_c;
     int N_c;
     int delta;
     int aux;
     __shared__ Solution s[nThreads];
-    __shared__ unsigned int* rank;
+
     int c_min;
     short int aux1;
     short int aux2;
@@ -18,7 +18,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     short int op;
     short int t;
     int i,j, ite, flag;
-    rank = (unsigned int*)malloc(sizeof(unsigned int)*inst->nJobs*inst->mAgents);
     if(threadIdx.x < 1){
     	for(i=0;i<inst->nJobs*inst->mAgents;i++){
     		rank[i]=0;
@@ -162,7 +161,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 
     free(s[threadIdx.x].s);
     free(s[threadIdx.x].resUsage);
-    free(rank);
     if(threadIdx.x <1 )
     {
         printf("\ntestes: %d\n", c_min);
