@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
 	struct timeval inicio;
 	struct timeval fim;
 	int tmili;
+	size_t size_solution;
 	const char *fileName = argv[1];
 	//const char *fileName = "a05100";
 	int deviceCount = 0;
@@ -61,7 +62,11 @@ int main(int argc, char *argv[]){
 	}
 	//showSolution(sol,inst);
 	printf("greedy solution ok!\n");
+	size_solution = sizeof(Solution)
+							+ sizeof(Ts)*inst->nJobs //vector s
+							+ sizeof(TresUsage)*inst->mAgents; //vector resUsage
 	
+
 	srand(time(NULL));
 	//for(int i=0;i<=10;i++){
 	//schc_cpu(sol, inst, 50);
@@ -80,15 +85,18 @@ int main(int argc, char *argv[]){
 	cudaEventRecord(start);
 
 	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL), states, 100);
-	gpuDeviceSynchronize();
+
 	cudaEventRecord(stop);
 
+	gpuMemcpy(sol, d_solution, size_solution, cudaMemcpyDeviceToHost);
+	cudaEventSynchronize(stop);
 	float milliseconds = 0;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	printf("time: %.4fms\n", milliseconds);
 	gettimeofday(&fim, NULL);
 	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
 	printf("tempo: %d\n",tmili);
+	showSolution(sol,inst);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
 	free(inst);
