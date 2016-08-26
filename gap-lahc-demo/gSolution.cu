@@ -162,7 +162,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
 
     free(s[threadIdx.x].s);
     free(s[threadIdx.x].resUsage);
-
+    free(rank);
     if(threadIdx.x <1 )
     {
         printf("\ntestes: %d\n", c_min);
