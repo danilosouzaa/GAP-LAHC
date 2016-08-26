@@ -96,6 +96,10 @@ int main(int argc, char *argv[]){
 	gettimeofday(&fim, NULL);
 	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
 	printf("tempo: %d\n",tmili);
+	//reallocation pointers of Solution
+	sol->s = (Ts*)(sol+1);
+	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
+
 	showSolution(sol,inst);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
