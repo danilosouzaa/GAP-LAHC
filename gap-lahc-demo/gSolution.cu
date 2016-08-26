@@ -9,6 +9,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     int delta;
     int aux;
     __shared__ Solution s[nThreads];
+    __shared__ int* rank;
     int c_min;
     short int aux1;
     short int aux2;
@@ -17,6 +18,12 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
     short int op;
     short int t;
     int i,j, ite, flag;
+    rank = (int*)malloc(sizeof(int)*inst->nJobs*inst->mAgents);
+    if(threadIdx.x < 1){
+    	for(i=0;i<inst->nJobs*inst->mAgents;i++){
+    		rank[i]=0;
+    	}
+    }
     s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
     s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
     curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
@@ -133,9 +140,22 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, curandSta
         c_min = s[threadIdx.x].costFinal;
         for(i=0; i<nThreads; i++)
         {
+        	for(j=0;j<inst->nJobs;j++){
+        		atomicinc(&rank[j * inst->mAgents +s[i].s[j]]);
+        	}
+
             if(s[i].costFinal<c_min)
             {
                 c_min = s[i].costFinal;
+                sol.costFinal = s[i].costFinal;
+                for(j=0; j<inst->nJobs; j++)
+                {
+                    sol->s[j] = s[i].s[j] ;
+                }
+                for(j=0; j<inst->mAgents; j++)
+                {
+                	 sol->resUsage[j] = s[i].resUsage[j];
+                }
             }
         }
     }
