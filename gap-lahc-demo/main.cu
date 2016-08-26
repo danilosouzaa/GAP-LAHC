@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
 		sol = guloso(inst,1,2);
 	}
 	//showSolution(sol,inst);
-	printf("greedy solution ok!\n");
+	//printf("greedy solution ok!\n");
 	size_solution = sizeof(Solution)
 							+ sizeof(Ts)*inst->nJobs //vector s
 							+ sizeof(TresUsage)*inst->mAgents; //vector resUsage
