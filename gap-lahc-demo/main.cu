@@ -96,6 +96,11 @@ int main(int argc, char *argv[]){
 	gettimeofday(&fim, NULL);
 	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
 	printf("tempo: %d\n",tmili);
+	//reallocation pointers of Instance
+	inst->cost = (Tcost*)(inst+1);
+	inst->resourcesAgent =(TresourcesAgent*) (inst->cost +(inst->nJobs*inst->mAgents));
+	inst->capacity =(Tcapacity*) (inst->resourcesAgent + (inst->nJobs*inst->mAgents));
+
 	//reallocation pointers of Solution
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
