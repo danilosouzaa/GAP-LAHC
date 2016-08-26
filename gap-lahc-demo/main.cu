@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 	gettimeofday(&inicio, NULL);
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
-
+	printf("inst:%d\n", inst->nJobs);
 	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL), states, 100);
 
 	cudaEventRecord(stop);
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
 	inst->cost = (Tcost*)(inst+1);
 	inst->resourcesAgent =(TresourcesAgent*) (inst->cost +(inst->nJobs*inst->mAgents));
 	inst->capacity =(Tcapacity*) (inst->resourcesAgent + (inst->nJobs*inst->mAgents));
-	printf("inst:%d\n", inst->nJobs);
+
 	//reallocation pointers of Solution
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
