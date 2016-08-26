@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 	//reallocation pointers of Solution
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
-
+	printf("Custo final:%d\n", sol->costFinal);
 	showSolution(sol,inst);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
