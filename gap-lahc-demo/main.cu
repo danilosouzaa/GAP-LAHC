@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 	const char *fileName = argv[1];
 	//const char *fileName = "a05100";
 	int deviceCount = 0;
-	//int i;
+	int i,j;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
 	if (error_id != cudaSuccess)
 	{
@@ -93,6 +93,7 @@ int main(int argc, char *argv[]){
 	cudaEventRecord(stop);
 
 	gpuMemcpy(sol, d_solution, size_solution, cudaMemcpyDeviceToHost);
+	gpuMemcpy(h_rank, d_rank,sizeof(unsigned int)*inst->nJobs*inst->mAgents , cudaMemcpyDeviceToHost);
 	cudaEventSynchronize(stop);
 	float milliseconds = 0;
 	cudaEventElapsedTime(&milliseconds, start, stop);
@@ -110,6 +111,11 @@ int main(int argc, char *argv[]){
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
 
 	showSolution(sol,inst);
+	for(i=0;i<inst->nJobs;i++){
+		for(j=0;j<inst->mAgents;j++){
+			printf("Qnt Job %d foi alocada no Agente %d: %d\n",i+1,j+1,h_rank[i*inst->mAgents+j]);
+		}
+	}
 	gpuFree(d_instance);
 	gpuFree(d_solution);
 	free(inst);

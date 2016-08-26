@@ -18,11 +18,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
     short int op;
     short int t;
     int i,j, ite, flag;
-    if(threadIdx.x < 1){
-    	for(i=0;i<inst->nJobs*inst->mAgents;i++){
-    		rank[i]=0;
-    	}
-    }
     s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
     s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
     curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
