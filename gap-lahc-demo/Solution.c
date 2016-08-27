@@ -95,3 +95,70 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c){
 
 
 }
+
+
+void createDat(Instance *inst, unsigned int *rank,const char *fileName){
+	FILE *f;
+	char nf[20];
+	nf=fileName;
+	strcat(n,".dat");
+	int i,j;
+	f = fopen (nf,"w");
+	if(f==NULL){
+		printf("erro \n ");
+	}else{
+		fprintf(f,"data;\n\n");
+		fprintf(f,"param n:= %d;\n\n", inst->nJobs);
+		fprintf(f,"param m:= %d;\n\n", inst->mAgents);
+
+		fprintf(f,"param cost: ");
+		for(i=1;i<=inst->nJobs;i++){
+			fprintf(f,"%d ",i);
+		}
+		fprintf(":=\n");
+		for(j=1;j<=inst->mAgents;j++){
+			fprintf(f,"%d \t", j);
+			for(i=1;i<=inst->nJobs;i++){
+				fprintf(f,"%d ",inst->cost[(i-1)*inst->mAgents + (j-1)]);
+			}
+			if(j==inst->mAgents){
+				fprintf(f,";");
+			}
+			fprintf(f,"\n");
+		}
+		fprintf(f,"\n");
+
+		fprintf(f,"param capacity:= ");
+		for(j=1;j<=inst->mAgents;j++){
+			fprintf(f,"%d \t %d", j , inst->capacity);
+
+			if(j==inst->mAgents){
+				fprintf(f,";");
+			}
+			fprintf(f,"\n");
+		}
+		fprintf(f,"\n");
+
+		fprintf(f,"param freq: ");
+		for(i=1;i<=inst->nJobs;i++){
+			fprintf(f,"%d ",i);
+		}
+		fprintf(f,":=\n");
+		for(j=1;j<=inst->mAgents;j++){
+			fprintf(f,"%d \t", j);
+			for(i=1;i<=inst->nJobs;i++){
+				fprintf(f,"%d ",rank[(i-1)*inst->mAgents + (j-1)]);
+			}
+			if(j==inst->mAgents){
+				fprintf(f,";");
+			}
+			fprintf(f,"\n");
+		}
+		fprintf(f,"\n");
+
+		fprintf(f,"end;");
+	}
+	fclose(f);
+
+
+}

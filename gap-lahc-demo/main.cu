@@ -116,6 +116,7 @@ int main(int argc, char *argv[]){
 			printf("Qnt Job %d foi alocada no Agente %d: %d\n",i+1,j+1,h_rank[i*inst->mAgents+j]);
 		}
 	}
+	createDat(inst, rank, fileName);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
 	free(inst);
