@@ -99,7 +99,7 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c){
 
 void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 	FILE *f;
-	char nf[20];
+	char nf[20]="";
 	strcat(nf,fileName);
 	strcat(nf,".dat");
 	int i,j;
