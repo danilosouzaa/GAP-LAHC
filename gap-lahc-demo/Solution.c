@@ -119,7 +119,7 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		for(j=1;j<=inst->nJobs;j++){
 			fprintf(f,"%d \t", j);
 			for(i=1;i<=inst->mAgents;i++){
-				fprintf(f,"%d ",inst->cost[(i-1)*inst->mAgents + (j-1)]);
+				fprintf(f,"%d ",inst->cost[(j-1)*inst->mAgents + (i-1)]);
 			}
 			if(j==inst->nJobs){
 				fprintf(f,";");
@@ -136,7 +136,7 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		for(j=1;j<=inst->nJobs;j++){
 			fprintf(f,"%d \t", j);
 			for(i=1;i<=inst->mAgents;i++){
-				fprintf(f,"%d ",inst->resourcesAgent[(i-1)*inst->mAgents + (j-1)]);
+				fprintf(f,"%d ",inst->resourcesAgent[(j-1)*inst->mAgents + (i-1)]);
 			}
 			if(j==inst->nJobs){
 				fprintf(f,";");
@@ -164,7 +164,7 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		for(j=1;j<=inst->nJobs;j++){
 			fprintf(f,"%d \t", j);
 			for(i=1;i<=inst->mAgents;i++){
-				fprintf(f,"%d ",rank[(i-1)*inst->mAgents + (j-1)]);
+				fprintf(f,"%d ",rank[(j-1)*inst->mAgents + (i-1)]);
 			}
 			if(j==inst->nJobs){
 				fprintf(f,";");
