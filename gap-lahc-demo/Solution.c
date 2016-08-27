@@ -100,8 +100,8 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c){
 void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 	FILE *f;
 	char nf[20];
-	nf=fileName;
-	strcat(n,".dat");
+	strcat(nf,fileName);
+	strcat(nf,".dat");
 	int i,j;
 	f = fopen (nf,"w");
 	if(f==NULL){
@@ -115,7 +115,7 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		for(i=1;i<=inst->nJobs;i++){
 			fprintf(f,"%d ",i);
 		}
-		fprintf(":=\n");
+		fprintf(f,":=\n");
 		for(j=1;j<=inst->mAgents;j++){
 			fprintf(f,"%d \t", j);
 			for(i=1;i<=inst->nJobs;i++){
@@ -130,7 +130,7 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 
 		fprintf(f,"param capacity:= ");
 		for(j=1;j<=inst->mAgents;j++){
-			fprintf(f,"%d \t %d", j , inst->capacity);
+			fprintf(f,"%d \t %d", j , inst->capacity[j-1]);
 
 			if(j==inst->mAgents){
 				fprintf(f,";");
