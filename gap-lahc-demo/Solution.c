@@ -174,7 +174,7 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		fprintf(f,"\n");
 	}
 
-	fprintf("end;");
+	fprintf(f,"end;");
 	fclose(f);
 
 
