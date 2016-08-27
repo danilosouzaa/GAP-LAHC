@@ -173,6 +173,8 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		}
 		fprintf(f,"\n");
 	}
+
+	fprintf("end;");
 	fclose(f);
 
 
