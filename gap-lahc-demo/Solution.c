@@ -112,16 +112,16 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		fprintf(f,"param m:= %d;\n\n", inst->mAgents);
 
 		fprintf(f,"param cost: ");
-		for(i=1;i<=inst->nJobs;i++){
+		for(i=1;i<=inst->mAgents;i++){
 			fprintf(f,"%d ",i);
 		}
 		fprintf(f,":=\n");
-		for(j=1;j<=inst->mAgents;j++){
+		for(j=1;j<=inst->nJobs;j++){
 			fprintf(f,"%d \t", j);
-			for(i=1;i<=inst->nJobs;i++){
+			for(i=1;i<=inst->mAgents;i++){
 				fprintf(f,"%d ",inst->cost[(i-1)*inst->mAgents + (j-1)]);
 			}
-			if(j==inst->mAgents){
+			if(j==inst->nJobs){
 				fprintf(f,";");
 			}
 			fprintf(f,"\n");
@@ -129,16 +129,16 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		fprintf(f,"\n");
 
 		fprintf(f,"param resources: ");
-		for(i=1;i<=inst->nJobs;i++){
+		for(i=1;i<=inst->mAgents;i++){
 			fprintf(f,"%d ",i);
 		}
 		fprintf(f,":=\n");
-		for(j=1;j<=inst->mAgents;j++){
+		for(j=1;j<=inst->nJobs;j++){
 			fprintf(f,"%d \t", j);
-			for(i=1;i<=inst->nJobs;i++){
+			for(i=1;i<=inst->mAgents;i++){
 				fprintf(f,"%d ",inst->resourcesAgent[(i-1)*inst->mAgents + (j-1)]);
 			}
-			if(j==inst->mAgents){
+			if(j==inst->nJobs){
 				fprintf(f,";");
 			}
 			fprintf(f,"\n");
@@ -157,23 +157,21 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		fprintf(f,"\n");
 
 		fprintf(f,"param freq: ");
-		for(i=1;i<=inst->nJobs;i++){
+		for(i=1;i<=inst->mAgents;i++){
 			fprintf(f,"%d ",i);
 		}
 		fprintf(f,":=\n");
-		for(j=1;j<=inst->mAgents;j++){
+		for(j=1;j<=inst->nJobs;j++){
 			fprintf(f,"%d \t", j);
-			for(i=1;i<=inst->nJobs;i++){
+			for(i=1;i<=inst->mAgents;i++){
 				fprintf(f,"%d ",rank[(i-1)*inst->mAgents + (j-1)]);
 			}
-			if(j==inst->mAgents){
+			if(j==inst->nJobs){
 				fprintf(f,";");
 			}
 			fprintf(f,"\n");
 		}
 		fprintf(f,"\n");
-
-		fprintf(f,"end;");
 	}
 	fclose(f);
 
