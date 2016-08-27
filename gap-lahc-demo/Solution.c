@@ -128,6 +128,23 @@ void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 		}
 		fprintf(f,"\n");
 
+		fprintf(f,"param resources: ");
+		for(i=1;i<=inst->nJobs;i++){
+			fprintf(f,"%d ",i);
+		}
+		fprintf(f,":=\n");
+		for(j=1;j<=inst->mAgents;j++){
+			fprintf(f,"%d \t", j);
+			for(i=1;i<=inst->nJobs;i++){
+				fprintf(f,"%d ",inst->resourcesAgent[(i-1)*inst->mAgents + (j-1)]);
+			}
+			if(j==inst->mAgents){
+				fprintf(f,";");
+			}
+			fprintf(f,"\n");
+		}
+		fprintf(f,"\n");
+
 		fprintf(f,"param capacity:= ");
 		for(j=1;j<=inst->mAgents;j++){
 			fprintf(f,"%d \t %d", j , inst->capacity[j-1]);
