@@ -110,12 +110,12 @@ int main(int argc, char *argv[]){
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
 
-	showSolution(sol,inst);
+	/*showSolution(sol,inst);
 	for(i=0;i<inst->nJobs;i++){
 		for(j=0;j<inst->mAgents;j++){
 			printf("Qnt Job %d foi alocada no Agente %d: %d\n",i+1,j+1,h_rank[i*inst->mAgents+j]);
 		}
-	}
+	}*/
 	createDat(inst, h_rank, fileName);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
