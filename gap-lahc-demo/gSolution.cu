@@ -11,6 +11,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	int test_ite = 0 ;
 	int max_ite = 0;
 	__shared__ Solution s[nThreads];
+	__shared__ max_ite = 0;
 
 	int c_min;
 	short int aux1;
@@ -165,8 +166,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	if(threadIdx.x <1 )
 	{
 		printf("\ntestes: %d\n", c_min);
+		printf("maximo de iterações: %d\n", max_ite);
 	}
-	printf("maximo de iterações: %d\n", max_ite);
+
 }
 
 
