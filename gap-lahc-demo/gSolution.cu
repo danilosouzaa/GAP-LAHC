@@ -166,7 +166,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	{
 		printf("\ntestes: %d\n", c_min);
 	}
-	printf("maximo de iterações: %d", max_ite);
+	printf("maximo de iterações: %d\n", max_ite);
 }
 
 
