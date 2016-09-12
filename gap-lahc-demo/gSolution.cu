@@ -9,9 +9,12 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	int delta;
 	int aux;
 	int test_ite = 0 ;
-	int max_ite = 0;
+
 	__shared__ Solution s[nThreads];
-	__shared__ max_ite = 0;
+	__shared__ int max_ite;
+	if(threadIdx.x<1){
+		max_ite = 0;
+	}
 
 	int c_min;
 	short int aux1;
