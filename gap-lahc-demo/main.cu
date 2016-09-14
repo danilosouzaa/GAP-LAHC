@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 	const char *fileName = argv[1];
 	//const char *fileName = "a05100";
 	int deviceCount = 0;
-	int i,j;
+	//int i,j;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
 	if (error_id != cudaSuccess)
 	{

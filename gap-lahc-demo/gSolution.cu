@@ -69,11 +69,38 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 				delta -= inst->cost[ aux_p[0]*inst->mAgents+s[threadIdx.x].s[aux_p[0]]];
 				for(i=1; i<=t; i++)
 				{
-					do
-					{
+
 						flag = 0;
 						aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
-						while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]]))
+						for(j=0; j<i; j++)
+						{
+							if(aux_p[i]==aux_p[j])
+							{
+								flag = 1;
+							}
+						}
+						if((s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]])||(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]])||(flag==1)||(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] > inst->capacity[s[threadIdx.x].s[aux_p[i]]])){
+							aux = aux_p[i];
+							do{
+								flag = 0;
+								aux_p[i]=(aux_p[i]+1)%(inst->nJobs);
+								for(j=0; j<i; j++)
+								{
+									if(aux_p[i]==aux_p[j])
+									{
+										flag = 1;
+									}
+								}
+								if((s[threadIdx.x].s[aux_p[i]]!=s[threadIdx.x].s[aux_p[i-1]])&&(s[threadIdx.x].s[aux_p[0]]!=s[threadIdx.x].s[aux_p[t]])&&(flag!=1)&&(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] <= inst->capacity[s[threadIdx.x].s[aux_p[i]]])){
+									break;
+								}
+							}while(aux_p[i]!=aux);
+							if(aux==aux_p[i]){
+								aux=0;
+							}
+						}
+
+						/*while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]]))
 						{
 							aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
 						}
@@ -83,15 +110,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 							{
 								flag = 1;
 							}
-						}
-					} while((s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]])||(flag==1));
+						}*/
 					delta += inst->cost[aux_p[i-1]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
 					delta -= inst->cost[aux_p[i]*inst->mAgents+s[threadIdx.x].s[aux_p[i]]];
 
-					if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]]>inst->capacity[s[threadIdx.x].s[aux_p[i]]])
-					{
-						aux=0;
-					}
 
 				}
 				delta += inst->cost[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]];
