@@ -19,8 +19,10 @@ int main(int argc, char *argv[]){
 	struct timeval inicio;
 	struct timeval fim;
 	int tmili;
+	int l_c;
 	size_t size_solution;
 	const char *fileName = argv[1];
+	l_c = atoi(argv[2]);
 	//const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i,j;
@@ -88,7 +90,7 @@ int main(int argc, char *argv[]){
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
 
-	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL),d_rank, states, 100);
+	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL),d_rank, states, l_c);
 
 	cudaEventRecord(stop);
 
