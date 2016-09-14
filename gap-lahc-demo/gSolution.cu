@@ -69,8 +69,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 				delta -= inst->cost[ aux_p[0]*inst->mAgents+s[threadIdx.x].s[aux_p[0]]];
 				for(i=1; i<=t; i++)
 				{
+
+					aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
+					aux1 = aux_p[i];
+					do{
 						flag = 0;
-						aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
 						for(j=0; j<i; j++)
 						{
 							if(aux_p[i]==aux_p[j])
@@ -78,28 +81,17 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 								flag = 1;
 							}
 						}
-						if((s[threadIdx.x].s[aux_p[i]]==s[threadIdx.x].s[aux_p[i-1]])||(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]])||(flag==1)||(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] > inst->capacity[s[threadIdx.x].s[aux_p[i]]])){
-							aux1 = aux_p[i];
-							do{
-								flag = 0;
-								aux_p[i]=(aux_p[i]+1)%(inst->nJobs);
-								for(j=0; j<i; j++)
-								{
-									if(aux_p[i]==aux_p[j])
-									{
-										flag = 1;
-									}
-								}
-								if((s[threadIdx.x].s[aux_p[i]]!=s[threadIdx.x].s[aux_p[i-1]])&&(s[threadIdx.x].s[aux_p[0]]!=s[threadIdx.x].s[aux_p[t]])&&(flag!=1)&&(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] <= inst->capacity[s[threadIdx.x].s[aux_p[i]]])){
-									break;
-								}
-							}while(aux_p[i]!=aux1);
-							if(aux1==aux_p[i]){
-								aux=0;
-							}
+						if((s[threadIdx.x].s[aux_p[i]]!=s[threadIdx.x].s[aux_p[i-1]])&&(s[threadIdx.x].s[aux_p[0]]!=s[threadIdx.x].s[aux_p[t]])&&(flag!=1)&&(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] <= inst->capacity[s[threadIdx.x].s[aux_p[i]]])){
+							break;
 						}
+						aux_p[i]=(aux_p[i]+1)%(inst->nJobs);
+					}while(aux_p[i]!=aux1);
+					if(aux1==aux_p[i]){
+						aux=0;
+					}
 
-						/*while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]]))
+
+					/*while((i==t)&&(s[threadIdx.x].s[aux_p[0]]==s[threadIdx.x].s[aux_p[t]]))
 						{
 							aux_p[i] = curand(&states[threadIdx.x])%inst->nJobs;
 						}
@@ -201,8 +193,8 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
 	printf("Begin createGpuSolution!\n");
 
 	size_t size_solution = sizeof(Solution)
-                        		   + sizeof(Ts)*nJobs //vector s
-                        		   + sizeof(TresUsage)*mAgents; // vector resUsage
+                        				   + sizeof(Ts)*nJobs //vector s
+                        				   + sizeof(TresUsage)*mAgents; // vector resUsage
 	Solution *d_sol;
 	gpuMalloc((void**)&d_sol, size_solution);
 	printf("malloc solution ok!\n");
