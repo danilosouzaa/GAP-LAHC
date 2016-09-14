@@ -99,10 +99,10 @@ int main(int argc, char *argv[]){
 	cudaEventSynchronize(stop);
 	float milliseconds = 0;
 	cudaEventElapsedTime(&milliseconds, start, stop);
-	printf("time: %.4fms\n", milliseconds);
+	printf("%.4fms\n", milliseconds);
 	gettimeofday(&fim, NULL);
 	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
-	printf("tempo: %d\n",tmili);
+	//printf("tempo: %d\n",tmili);
 	//reallocation pointers of Instance
 	inst->cost = (Tcost*)(inst+1);
 	inst->resourcesAgent =(TresourcesAgent*) (inst->cost +(inst->nJobs*inst->mAgents));
@@ -123,6 +123,6 @@ int main(int argc, char *argv[]){
 	gpuFree(d_solution);
 	free(inst);
 	free(sol);
-	printf("program finished successfully!\n");
+	//printf("program finished successfully!\n");
 	return 0;
 }

@@ -181,8 +181,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	free(s[threadIdx.x].resUsage);
 	if(threadIdx.x <1 )
 	{
-		printf("\ntestes: %d\n", c_min);
-		printf("maximo de iterações: %d\n", max_ite);
+		printf("\n%d ---- ", c_min);
+		printf("%d ----", max_ite);
 	}
 
 }
