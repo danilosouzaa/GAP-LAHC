@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
 
 	Instance *inst = loadInstance(fileName);
 	//showInstance(inst);
-	printf("Load data instance ok!\n");
+	//printf("Load data instance ok!\n");
 
 
 	Solution *sol = allocationPointersSolution(inst);
