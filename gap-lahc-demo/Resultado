@@ -1,0 +1,909 @@
+	   Instancia	lc	ex
+exp. a05100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1698 ---- 42 ----53258.8828ms
+exp. a05100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1698 ---- 42 ----53391.3125ms
+exp. a05100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1698 ---- 48 ----53294.3555ms
+exp. a05100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1698 ---- 35 ----53525.2695ms
+exp. a05100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1698 ---- 42 ----53209.7188ms
+exp. a05200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3235 ---- 41 ----94909.5547ms
+exp. a05200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3235 ---- 44 ----95671.4141ms
+exp. a05200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3235 ---- 43 ----95190.5156ms
+exp. a05200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3235 ---- 40 ----95570.3750ms
+exp. a05200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3235 ---- 39 ----94999.1484ms
+exp. a10100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1360 ---- 50 ----40607.6484ms
+exp. a10100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1360 ---- 45 ----39871.1914ms
+exp. a10100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1360 ---- 45 ----40103.0820ms
+exp. a10100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1360 ---- 45 ----39953.5820ms
+exp. a10100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1360 ---- 45 ----39906.0664ms
+exp. a10200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2627 ---- 40 ----59256.9180ms
+exp. a10200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2625 ---- 34 ----59901.9141ms
+exp. a10200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2626 ---- 32 ----59276.6797ms
+exp. a10200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2627 ---- 33 ----59901.1680ms
+exp. a10200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2628 ---- 35 ----59433.6641ms
+exp. a20100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1158 ---- 43 ----29519.7539ms
+exp. a20100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1158 ---- 44 ----29072.2461ms
+exp. a20100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1158 ---- 44 ----29032.9102ms
+exp. a20100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1158 ---- 45 ----29563.6523ms
+exp. a20100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1158 ---- 51 ----29126.9883ms
+exp. a20200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2361 ---- 33 ----37447.4180ms
+exp. a20200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2361 ---- 34 ----36993.7422ms
+exp. a20200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2360 ---- 33 ----37102.3516ms
+exp. a20200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2362 ---- 34 ----37381.3984ms
+exp. a20200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2357 ---- 33 ----37238.6523ms
+exp. b05100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1859 ---- 516 ----850656.8750ms
+exp. b05100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1843 ---- 836 ----847824.6250ms
+exp. b05100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1849 ---- 491 ----836556.0625ms
+exp. b05100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1847 ---- 485 ----839280.1250ms
+exp. b05100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1856 ---- 487 ----842933.1250ms
+exp. b05200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3654 ---- 487 ----923679.0000ms
+exp. b05200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3655 ---- 483 ----922448.6875ms
+exp. b05200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3645 ---- 511 ----919019.6875ms
+exp. b05200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3643 ---- 538 ----930559.2500ms
+exp. b05200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3643 ---- 511 ----927264.3125ms
+exp. b10100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1414 ---- 465 ----209092.5000ms
+exp. b10100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1414 ---- 535 ----213245.9375ms
+exp. b10100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1414 ---- 392 ----213568.5312ms
+exp. b10100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1413 ---- 423 ----215268.9219ms
+exp. b10100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1413 ---- 513 ----211922.9688ms
+exp. b10200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2928 ---- 520 ----478467.1875ms
+exp. b10200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2913 ---- 485 ----478656.2500ms
+exp. b10200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2926 ---- 505 ----478048.8125ms
+exp. b10200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2907 ---- 445 ----477535.9062ms
+exp. b10200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2913 ---- 525 ----488874.6875ms
+exp. b20100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1180 ---- 285 ----100154.0859ms
+exp. b20100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1176 ---- 289 ----102959.1016ms
+exp. b20100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1180 ---- 300 ----102102.2031ms
+exp. b20100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1179 ---- 262 ----103312.5000ms
+exp. b20100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1180 ---- 253 ----98618.5547ms
+exp. b20200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2377 ---- 180 ----110347.9375ms
+exp. b20200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2376 ---- 186 ----108858.3047ms
+exp. b20200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2374 ---- 245 ----110808.2109ms
+exp. b20200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2372 ---- 192 ----111032.6406ms
+exp. b20200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2376 ---- 175 ----107990.9141ms
+exp. c05100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1947 ---- 478 ----598899.5625ms
+exp. c05100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1955 ---- 528 ----578208.6250ms
+exp. c05100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1955 ---- 486 ----585320.4375ms
+exp. c05100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1961 ---- 546 ----578653.0000ms
+exp. c05100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1959 ---- 447 ----585823.0625ms
+exp. c05200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3529 ---- 469 ----957071.5625ms
+exp. c05200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3532 ---- 570 ----963393.6250ms
+exp. c05200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3540 ---- 432 ----955182.3750ms
+exp. c05200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3540 ---- 438 ----958660.8750ms
+exp. c05200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+3540 ---- 483 ----969742.8125ms
+exp. c10100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1431 ---- 506 ----328585.2188ms
+exp. c10100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1435 ---- 509 ----338181.0312ms
+exp. c10100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1435 ---- 515 ----332637.5000ms
+exp. c10100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1434 ---- 527 ----334274.2812ms
+exp. c10100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1434 ---- 727 ----346462.7188ms
+exp. c10200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2894 ---- 493 ----574693.8125ms
+exp. c10200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2908 ---- 489 ----555942.0000ms
+exp. c10200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2901 ---- 594 ----559955.5000ms
+exp. c10200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2906 ---- 536 ----571170.1250ms
+exp. c10200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2911 ---- 475 ----556149.2500ms
+exp. c10400 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5933 ---- 408 ----699529.0625ms
+exp. c10400 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5918 ---- 544 ----706349.5000ms
+exp. c10400 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5939 ---- 513 ----705451.7500ms
+exp. c10400 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5934 ---- 438 ----719117.6875ms
+exp. c10400 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5943 ---- 469 ----704409.1250ms
+exp. c15900 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+13019 ---- 403 ----641115.8750ms
+exp. c15900 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+13034 ---- 292 ----640067.1250ms
+exp. c15900 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+13000 ---- 279 ----639382.0625ms
+exp. c15900 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+13037 ---- 330 ----644042.5625ms
+exp. c15900 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+13024 ---- 311 ----639815.5625ms
+exp. c20100 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1266 ---- 416 ----186337.1250ms
+exp. c20100 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1269 ---- 368 ----188473.9062ms
+exp. c20100 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1276 ---- 439 ----186432.0938ms
+exp. c20100 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1263 ---- 437 ----194581.9844ms
+exp. c20100 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+1279 ---- 427 ----185060.4062ms
+exp. c20200 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2476 ---- 431 ----251253.3438ms
+exp. c20200 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2484 ---- 446 ----256046.9375ms
+exp. c20200 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2471 ---- 479 ----251344.2500ms
+exp. c20200 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2481 ---- 400 ----254610.7656ms
+exp. c20200 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+2452 ---- 406 ----250620.6719ms
+exp. c20400 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5116 ---- 467 ----338075.3750ms
+exp. c20400 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5115 ---- 361 ----338373.6562ms
+exp. c20400 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5133 ---- 340 ----341614.8750ms
+exp. c20400 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5117 ---- 379 ----339531.5625ms
+exp. c20400 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+5145 ---- 422 ----339336.3125ms
+exp. c30900 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+11681 ---- 186 ----294196.5312ms
+exp. c30900 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+11695 ---- 217 ----293207.9688ms
+exp. c30900 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+11726 ---- 260 ----295749.9375ms
+exp. c30900 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+11723 ---- 183 ----296271.4375ms
+exp. c30900 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+11718 ---- 182 ----290153.8125ms
+exp. c40400 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+4571 ---- 203 ----145621.5156ms
+exp. c40400 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+4531 ---- 206 ----145592.7969ms
+exp. c40400 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+4562 ---- 218 ----143484.3594ms
+exp. c40400 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+4563 ---- 204 ----146848.0000ms
+exp. c40400 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+4567 ---- 202 ----144492.7812ms
+exp. c60900 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+10754 ---- 132 ----130372.7266ms
+exp. c60900 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+10724 ---- 147 ----128681.7188ms
+exp. c60900 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+10770 ---- 132 ----130327.7891ms
+exp. c60900 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+10773 ---- 129 ----128516.6953ms
+exp. c60900 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+10755 ---- 149 ----130436.8906ms
+exp. c201600 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+22605 ---- 215 ----554173.0625ms
+exp. c201600 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+22619 ---- 254 ----548943.2500ms
+exp. c201600 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+22617 ---- 195 ----553922.5000ms
+exp. c201600 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+22621 ---- 225 ----546171.0000ms
+exp. c201600 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+22625 ---- 211 ----552778.8125ms
+exp. c401600 lc: 50 n_ex: 1
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+20764 ---- 188 ----212006.9375ms
+exp. c401600 lc: 50 n_ex: 2
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+20752 ---- 127 ----215563.9844ms
+exp. c401600 lc: 50 n_ex: 3
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+20756 ---- 105 ----211133.5469ms
+exp. c401600 lc: 50 n_ex: 4
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!
+
+20752 ---- 121 ----212717.4531ms
+exp. c401600 lc: 50 n_ex: 5
+Found 2 GPUs!
+GPU 0 initialized!
+Parameters load
+Pointers Allocated!

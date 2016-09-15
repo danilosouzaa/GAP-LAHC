@@ -11,6 +11,7 @@ for($n_lc=50;$n_lc<=150;$n_lc+=10){
 	    for($n_ex=1;$n_ex<=5;$n_ex++){
 		print FIN ("exp. $n lc: $n_lc n_ex: $n_ex\n");
 		close(FIN);
+		print("executando instancia $n pela $n_ex com lc $n_lc");
 		system("./m $n $n_lc >>Resultado");
 		open(FIN,">>Resultado");
 	    }
