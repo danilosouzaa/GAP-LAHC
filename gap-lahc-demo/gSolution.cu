@@ -36,7 +36,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
 	}
-
+	L_c = curand(&states[threadIdx.x])%101 + 50;
 	B_c = sol->costFinal;
 	N_c=0;
 	ite=0;
