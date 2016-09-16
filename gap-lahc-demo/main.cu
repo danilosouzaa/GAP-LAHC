@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
 	//printf("Load data instance ok!\n");
 
 
-	Solution *sol = allocationPointersSolution(inst);
+	Solution *sol;
 	if(fileName[0]=='e'){
 		sol = guloso(inst,1,20);
 	}else{
