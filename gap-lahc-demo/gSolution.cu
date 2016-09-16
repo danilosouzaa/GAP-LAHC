@@ -2,7 +2,7 @@
 
 const int nThreads = 1024;
 
-__global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned int *rank, curandState_t* states, int L_c)
+__global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned int *rank, curandState_t* states, int L_c)
 {
 	int B_c;
 	int N_c;
@@ -28,7 +28,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	int i,j, ite, flag;
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
-	curand_init(seed,threadIdx.x,0,&states[threadIdx.x]);
+	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
 	s[threadIdx.x].costFinal = sol->costFinal;
 	for(i=0; i<inst->nJobs; i++)
 	{
@@ -190,8 +190,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int seed, unsigned 
 	if(threadIdx.x <1 )
 	{
 		printf("\n%d ---- ", c_min);
-		printf("\n%d ---- ", c_max);
-		printf("\n%d ---- ", c_media);
+		printf("%d ---- ", c_max);
+		printf("%d ---- ", c_media);
 		printf("%d ----", max_ite);
 	}
 

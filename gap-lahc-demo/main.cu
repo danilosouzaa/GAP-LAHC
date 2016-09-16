@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 //int main(){
 	struct timeval inicio;
 	struct timeval fim;
-	int tmili;
+	int tmili,i;
 	int l_c;
 	size_t size_solution;
 	const char *fileName = argv[1];
@@ -48,6 +48,11 @@ int main(int argc, char *argv[]){
 	Instance *d_instance;
 	Solution *d_solution;
 	curandState_t* states;
+	unsigned int *h_seed = (unsigned int*)malloc(sizeof(unsigned int)*nThreads);
+	srand(time(NULL));
+	for(i=0;i<nThreads;i++){
+		h_seed[i] = rand()%100000;
+	}
 	cudaMalloc((void**) &states, nThreads * sizeof(curandState_t));
 
 
@@ -79,9 +84,14 @@ int main(int argc, char *argv[]){
 	unsigned int *h_rank = (unsigned int*)malloc(sizeof(unsigned int)*inst->nJobs*inst->mAgents);
 	memset(h_rank,0,sizeof(unsigned int)*inst->nJobs*inst->mAgents);
 	unsigned int *d_rank;
+	unsigned int *d_seed;
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
+
+	gpuMalloc((void*)&d_seed, sizeof(unsigned int)*nThreads);
+	gpuMemcpy(d_seed, h_seed, sizeof(unsigned int)*nThreads, cudaMemcpyHostToDevice);
+
 	gpuMalloc((void* ) &d_rank, sizeof(unsigned int)*inst->nJobs*inst->mAgents);
 	gpuMemcpy(d_rank, h_rank,sizeof(unsigned int)*inst->nJobs*inst->mAgents , cudaMemcpyHostToDevice);
 
@@ -90,7 +100,7 @@ int main(int argc, char *argv[]){
 	//schc_cpu(sol,inst,100);
 	cudaEventRecord(start);
 
-	SCHC<<<1,nThreads>>>(d_instance,d_solution, time(NULL),d_rank, states, l_c);
+	SCHC<<<1,nThreads>>>(d_instance,d_solution, d_seed ,d_rank, states, l_c);
 
 	cudaEventRecord(stop);
 
@@ -121,6 +131,9 @@ int main(int argc, char *argv[]){
 	createDat(inst, h_rank, fileName);
 	gpuFree(d_instance);
 	gpuFree(d_solution);
+	gpuFree(d_rank);
+	gpuFree(d_seed);
+	gpuFree(states);
 	free(inst);
 	free(sol);
 	//printf("program finished successfully!\n");
