@@ -17,8 +17,8 @@ Solution* allocationPointersSolution(Instance *inst){
 void showSolution(Solution *sol, Instance *inst){
 	int i;
 	printf("Data of Solution:\n");
-	printf("Cost of Solution: %d\n", sol->costFinal);
-	printf("Excess of capacity in Solution: %d\n", sol->excess);
+	printf("Cost of Solution: %ld\n", sol->costFinal);
+	printf("Excess of capacity in Solution: %ld\n", sol->excess);
 	for(i=0;i<inst->nJobs;i++){
 		printf("Job %d allocated in Agent %d.\n",i+1, sol->s[i]+1);
 	}
@@ -44,7 +44,7 @@ Solution* InitialRandom(Instance *inst){
 			 sol->excess += sol->resUsage[i]-inst->capacity[i];
 		 }
 	 }
-	 printf("custo da solução inicial: %d\n", sol->costFinal + 10000*sol->excess);
+	 printf("custo da solução inicial: %ld\n", sol->costFinal + 10000*sol->excess);
 	 return sol;
 }
 
@@ -114,7 +114,7 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c){
 		printf("%d\n",i);
 
 	}
-	printf("custo final: %d\n",s->costFinal);
+	printf("custo final: %ld\n",s->costFinal);
 
 
 }

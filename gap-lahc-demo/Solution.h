@@ -10,8 +10,8 @@
 #include "gpulib/types.h"
 
 EXTERN_C_BEGIN
-typedef int TcostFinal;
-typedef int Texcess;
+typedef long int TcostFinal;
+typedef long int Texcess;
 typedef short int Ts;
 typedef short int TresUsage;
 

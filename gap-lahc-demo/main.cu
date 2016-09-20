@@ -18,7 +18,8 @@ int main(int argc, char *argv[]){
 //int main(){
 	struct timeval inicio;
 	struct timeval fim;
-	int tmili,i;
+	//int tmili;
+	int i;
 	int l_c;
 	size_t size_solution;
 	const char *fileName = argv[1];
@@ -112,7 +113,7 @@ int main(int argc, char *argv[]){
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	printf("%.4fms\n", milliseconds);
 	gettimeofday(&fim, NULL);
-	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
+	//tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
 	//printf("tempo: %d\n",tmili);
 	//reallocation pointers of Instance
 	inst->cost = (Tcost*)(inst+1);

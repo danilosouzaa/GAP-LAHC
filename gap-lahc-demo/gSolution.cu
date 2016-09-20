@@ -16,8 +16,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		max_ite = 0;
 	}
 
-	int c_min;
-	int c_max;
+	long int c_min;
+	long int c_max;
 	//int c_media=0;
 	short int aux1;
 	short int aux2;
@@ -32,7 +32,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	s[threadIdx.x].costFinal = sol->costFinal;
 	s[threadIdx.x].excess = sol->excess;
 	if(threadIdx.x==1){
-		printf("Custo da solucao inicial: %d\n", s[threadIdx.x].costFinal);
+		printf("Custo da solucao inicial: %ld\n", s[threadIdx.x].costFinal);
 	}
 	for(i=0; i<inst->nJobs; i++)
 	{
@@ -208,10 +208,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			}
 			//c_media+=s[i].costFinal;
 		}
-		printf("\n%d ---- ", c_min);
+		printf("\n%ld ---- ", c_min);
 		printf("%d ----", max_ite);
 		//c_media=c_media/nThreads;
-		printf("%d ---- ", c_max);
+		printf("%ld ---- ", c_max);
 		//printf("%d ---- ", c_media);
 
 	}
