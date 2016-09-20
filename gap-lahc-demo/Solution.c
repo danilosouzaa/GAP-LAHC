@@ -27,6 +27,28 @@ void showSolution(Solution *sol, Instance *inst){
 	}
 }
 
+
+Solution* InitialRandom(Instance *inst){
+	 Solution *sol = allocationPointersSolution(inst);
+	 int i;
+	 sol->costFinal=0;
+	 srand(time(NULL));
+	 for(i=0;i<inst->nJobs;i++){
+		 sol->s[i]= rand()%inst->mAgents;
+		 sol->resUsage[sol->s[i]]+=inst->resourcesAgent[i*inst->mAgents+sol->s[i]];
+		 sol->costFinal+=inst->cost[i*inst->mAgents+sol->s[i]];
+	 }
+	 sol->excess = 0;
+	 for(i=0;i<inst->mAgents;i++){
+		 if(sol->resUsage[i]-inst->capacity[i]>0){
+			 sol->excess += sol->resUsage[i]-inst->capacity[i];
+		 }
+	 }
+	 return sol;
+}
+
+
+
 void schc_cpu(Solution *sol, Instance *inst, int L_c){
 
 	int B_c;

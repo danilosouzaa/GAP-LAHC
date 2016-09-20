@@ -53,6 +53,7 @@ int main(int argc, char *argv[]){
 	for(i=0;i<nThreads;i++){
 		h_seed[i] = rand()%100000;
 	}
+
 	cudaMalloc((void**) &states, nThreads * sizeof(curandState_t));
 
 
@@ -62,11 +63,12 @@ int main(int argc, char *argv[]){
 
 
 	Solution *sol;
-	if(fileName[0]=='e'){
-		sol = guloso(inst,1,20);
-	}else{
-		sol = guloso(inst,1,2);
-	}
+	//if(fileName[0]=='e'){
+	//	sol = guloso(inst,1,20);
+	//}else{
+	//	sol = guloso(inst,1,2);
+	//}
+	sol = InitialRandom(inst);
 	//showSolution(sol,inst);
 	//printf("greedy solution ok!\n");
 	size_solution = sizeof(Solution)
@@ -94,7 +96,6 @@ int main(int argc, char *argv[]){
 
 	gpuMalloc((void* ) &d_rank, sizeof(unsigned int)*inst->nJobs*inst->mAgents);
 	gpuMemcpy(d_rank, h_rank,sizeof(unsigned int)*inst->nJobs*inst->mAgents , cudaMemcpyHostToDevice);
-
 
 	gettimeofday(&inicio, NULL);
 	//schc_cpu(sol,inst,100);
@@ -133,9 +134,13 @@ int main(int argc, char *argv[]){
 	gpuFree(d_solution);
 	gpuFree(d_rank);
 	gpuFree(d_seed);
+
 	gpuFree(states);
 	free(inst);
 	free(sol);
+	free(h_rank);
+	free(h_seed);
+
 	//printf("program finished successfully!\n");
 	return 0;
 }

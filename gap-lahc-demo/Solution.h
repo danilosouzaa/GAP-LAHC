@@ -28,6 +28,8 @@ void showSolution(Solution *sol, Instance *inst);
 
 Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents);
 
+Solution* InitialRandom(Instance *inst);
+
 void schc_cpu(Solution *sol, Instance *inst, int L_c);
 
 void createDat(Instance *inst, unsigned int *rank,const char *fileName);

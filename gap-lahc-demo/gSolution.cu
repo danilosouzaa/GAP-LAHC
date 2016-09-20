@@ -17,15 +17,15 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	}
 
 	int c_min;
-	int c_max;
-	int c_media=0;
+	//int c_max;
+	//int c_media=0;
 	short int aux1;
 	short int aux2;
 	//short int aux3;
 	short int aux_p[10];
 	short int op;
 	short int t;
-	int i,j, ite, flag;
+	int i,j, ite, flag, excess_temp;
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
 	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
@@ -44,8 +44,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	ite=0;
 	while(ite<=15000)
 	{
-		do
-		{
+		//do
+		//{
 			op = curand(&states[threadIdx.x])%2;
 			//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 			aux=0;
@@ -56,11 +56,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
 				aux2 = curand(&states[threadIdx.x])%inst->mAgents;
 				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-				if((s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] <= inst->capacity[aux2])&&
-						(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] <= inst->capacity[s[threadIdx.x].s[aux1]]))
-				{
-					aux=1;
-				}
+				//if((s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] <= inst->capacity[aux2])&&
+				//		(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] <= inst->capacity[s[threadIdx.x].s[aux1]]))
+				//{
+				//	aux=1;
+				//}
 			}
 			else
 			{
@@ -84,7 +84,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 								flag = 1;
 							}
 						}
-						if((s[threadIdx.x].s[aux_p[i]] != s[threadIdx.x].s[aux_p[i-1]])&&( s[threadIdx.x].s[aux_p[0]] != s[threadIdx.x].s[aux_p[t]] ) &&(flag!=1)&&(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] <= inst->capacity[s[threadIdx.x].s[aux_p[i]]])){
+						if((s[threadIdx.x].s[aux_p[i]] != s[threadIdx.x].s[aux_p[i-1]])&&( s[threadIdx.x].s[aux_p[0]] != s[threadIdx.x].s[aux_p[t]] ) &&(flag!=1)/*&&(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] <= inst->capacity[s[threadIdx.x].s[aux_p[i]]])*/){
 							break;
 						}
 						aux_p[i]=(aux_p[i]+1)%(inst->nJobs);
@@ -111,21 +111,30 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 				}
 				delta += inst->cost[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]];
-				if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
-				{
-					aux=0;
-				}
+				//if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
+				//{
+				//	aux=0;
+				//}
 			}
 			test_ite++;
-		}
-		while(aux==0);
+		//}
+		//while(aux==0);
 		if(test_ite> max_ite){
 			max_ite = test_ite;
 		}
 		test_ite = 0;
-		if ((s[threadIdx.x].costFinal + delta < B_c)||(s[threadIdx.x].costFinal + delta <= s[threadIdx.x].costFinal))
+		excess_temp = 0;
+		for(i=0;i<inst->mAgents;i++){
+				 if(s[threadIdx.x].resUsage[i]-inst->capacity[i]>0){
+					 excess_temp += sol->resUsage[i]-inst->capacity[i];
+				 }
+		}
+
+
+		if ((s[threadIdx.x].costFinal + delta + excess_temp*1000  < B_c)||(s[threadIdx.x].costFinal + delta + excess_temp*1000 <= s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000 ))
 		{
 			s[threadIdx.x].costFinal += delta;
+			s[threadIdx.x].excess = excess_temp;
 			if(op==1)
 			{
 				s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] -= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1] ];
@@ -149,7 +158,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		N_c++;
 		if(N_c >= L_c)
 		{
-			B_c = s[threadIdx.x].costFinal;
+			B_c = s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000;
 			N_c = 0;
 		}
 		ite++;
@@ -157,18 +166,19 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 	if(threadIdx.x < 1)
 	{
-		c_min = s[threadIdx.x].costFinal;
-		c_max = s[threadIdx.x].costFinal;
+		c_min = s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000;
+		//c_max = s[threadIdx.x].costFinal;
 		for(i=0; i<nThreads; i++)
 		{
 			for(j=0;j<inst->nJobs;j++){
 				atomicInc(&rank[j * inst->mAgents +s[i].s[j]],nThreads+1);
 			}
 
-			if(s[i].costFinal<c_min)
+			if(s[i].costFinal + s[i].excess*1000 < c_min)
 			{
-				c_min = s[i].costFinal;
+ 				c_min = s[i].costFinal + s[i].excess*1000;
 				sol->costFinal = s[i].costFinal;
+				sol->excess = s[i].excess;
 				for(j=0; j<inst->nJobs; j++)
 				{
 					sol->s[j] = s[i].s[j] ;
@@ -178,22 +188,21 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 					sol->resUsage[j] = s[i].resUsage[j];
 				}
 			}
-			if(s[i].costFinal>c_max){
-				c_max = s[i].costFinal;
-			}
-			c_media+=s[i].costFinal;
+			//if(s[i].costFinal>c_max){
+			//	c_max = s[i].costFinal;
+			//}
+			//c_media+=s[i].costFinal;
 		}
+		printf("\n%d ---- ", c_min);
+		printf("%d ----", max_ite);
+		//c_media=c_media/nThreads;
+		//printf("%d ---- ", c_max);
+		//printf("%d ---- ", c_media);
+
 	}
-	c_media=c_media/nThreads;
+
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
-	if(threadIdx.x <1 )
-	{
-		printf("\n%d ---- ", c_min);
-		printf("%d ---- ", c_max);
-		printf("%d ---- ", c_media);
-		printf("%d ----", max_ite);
-	}
 
 }
 
