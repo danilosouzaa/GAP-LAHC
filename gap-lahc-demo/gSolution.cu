@@ -42,7 +42,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	B_c = sol->costFinal;
 	N_c=0;
 	ite=0;
-	while(ite<=15000)
+	while(ite<=1000000)
 	{
 		//do
 		//{
@@ -131,7 +131,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		}
 
 
-		if ((s[threadIdx.x].costFinal + delta + excess_temp*1000  < B_c)||(s[threadIdx.x].costFinal + delta + excess_temp*1000 <= s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000 ))
+		if ((s[threadIdx.x].costFinal + delta + excess_temp*100000  < B_c)||(s[threadIdx.x].costFinal + delta + excess_temp*100000 <= s[threadIdx.x].costFinal + s[threadIdx.x].excess*100000 ))
 		{
 			s[threadIdx.x].costFinal += delta;
 			s[threadIdx.x].excess = excess_temp;
@@ -158,7 +158,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		N_c++;
 		if(N_c >= L_c)
 		{
-			B_c = s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000;
+			B_c = s[threadIdx.x].costFinal + s[threadIdx.x].excess*100000;
 			N_c = 0;
 		}
 		ite++;
@@ -166,7 +166,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 	if(threadIdx.x < 1)
 	{
-		c_min = s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000;
+		c_min = s[threadIdx.x].costFinal + s[threadIdx.x].excess*100000;
 		//c_max = s[threadIdx.x].costFinal;
 		for(i=0; i<nThreads; i++)
 		{
@@ -174,9 +174,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				atomicInc(&rank[j * inst->mAgents +s[i].s[j]],nThreads+1);
 			}
 
-			if(s[i].costFinal + s[i].excess*1000 < c_min)
+			if(s[i].costFinal + s[i].excess*100000 < c_min)
 			{
- 				c_min = s[i].costFinal + s[i].excess*1000;
+ 				c_min = s[i].costFinal + s[i].excess*100000;
 				sol->costFinal = s[i].costFinal;
 				sol->excess = s[i].excess;
 				for(j=0; j<inst->nJobs; j++)
