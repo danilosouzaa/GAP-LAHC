@@ -31,6 +31,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
 	s[threadIdx.x].costFinal = sol->costFinal;
 	s[threadIdx.x].excess = sol->excess;
+	if(threadIdx.x==1){
+		printf("Custo da solucao inicial: %d\n", s[threadIdx.x].excess);
+	}
 	for(i=0; i<inst->nJobs; i++)
 	{
 		s[threadIdx.x].s[i] = sol->s[i];
