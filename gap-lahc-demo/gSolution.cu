@@ -30,6 +30,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
 	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
 	s[threadIdx.x].costFinal = sol->costFinal;
+	s[threadIdx.x].excess = sol->excess;
 	for(i=0; i<inst->nJobs; i++)
 	{
 		s[threadIdx.x].s[i] = sol->s[i];

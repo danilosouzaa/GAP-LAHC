@@ -44,6 +44,7 @@ Solution* InitialRandom(Instance *inst){
 			 sol->excess += sol->resUsage[i]-inst->capacity[i];
 		 }
 	 }
+	 printf("custo da solução inicial: %d\n", sol->costFinal + 10000*sol->excess);
 	 return sol;
 }
 
