@@ -32,7 +32,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	s[threadIdx.x].costFinal = sol->costFinal;
 	s[threadIdx.x].excess = sol->excess;
 	if(threadIdx.x==1){
-		printf("Custo da solucao inicial: %d\n", s[threadIdx.x].excess);
+		printf("Custo da solucao inicial: %d\n", s[threadIdx.x].costFinal);
 	}
 	for(i=0; i<inst->nJobs; i++)
 	{
