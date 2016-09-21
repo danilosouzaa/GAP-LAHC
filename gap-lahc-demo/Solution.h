@@ -11,9 +11,9 @@
 
 EXTERN_C_BEGIN
 typedef long int TcostFinal;
-typedef int Texcess;
-typedef int Ts;
-typedef int TresUsage;
+typedef long int Texcess;
+typedef long int Ts;
+typedef long int TresUsage;
 
 typedef struct{
 	TcostFinal costFinal;
