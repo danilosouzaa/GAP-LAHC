@@ -265,6 +265,7 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
                         				   + sizeof(Ts)*nJobs //vector s
                         				   + sizeof(TresUsage)*mAgents
                         				   + sizeof(Texcess)*mAgents; // vector resUsage
+	printf("size solution in createGpu: %d\n", size_solution);
 	Solution *d_sol;
 	gpuMalloc((void**)&d_sol, size_solution);
 	//printf("malloc solution ok!\n");

@@ -5,6 +5,7 @@ Solution* allocationPointersSolution(Instance *inst){
 									+ sizeof(Ts)*inst->nJobs //vector s
 									+ sizeof(TresUsage)*inst->mAgents //vector resUsage
 									+ sizeof(Texcess)*inst->mAgents; //vector excess
+	printf("size solution in allocation: %d\n", size_solution);
 	Solution* sol;
 	sol = (Solution*)malloc(size_solution);
 	assert(sol!=NULL);
@@ -26,6 +27,7 @@ void showSolution(Solution *sol, Instance *inst){
 	}
 	for(i=0;i<inst->mAgents;i++){
 		printf("Resources Usage in Agent %d: %d.\n",i+1,sol->resUsage[i]);
+		printf("Excess usage in Agent %d: %d.\n",i+1,sol->excess_temp[i]);
 	}
 }
 

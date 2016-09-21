@@ -22,9 +22,9 @@ int main(int argc, char *argv[]){
 	int i;
 	int l_c = 0;
 	size_t size_solution;
-	const char *fileName = argv[1];
+	//const char *fileName = argv[1];
 	//l_c = atoi(argv[2]);
-	//const char *fileName = "a05100";
+	const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i,j;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 	else
 	{
 		printf("Found %d GPUs!\n", deviceCount);
-		gpuSetDevice(1);
+		gpuSetDevice(0);
 		printf("GPU 1 initialized!\n");
 	}
 
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
 							+ sizeof(TresUsage)*inst->mAgents //vector resUsage
 							+ sizeof(Texcess)*inst->mAgents; //vector excess
 	
-
+	printf("size solution in main: %d\n", size_solution);
 	srand(time(NULL));
 	//for(int i=0;i<=10;i++){
 	//schc_cpu(sol, inst, 50);
