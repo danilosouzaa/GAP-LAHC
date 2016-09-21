@@ -35,7 +35,7 @@ Solution* InitialRandom(Instance *inst){
 	 int i;
 	 sol->costFinal=0;
 	 srand(time(NULL));
-	 for(i=0;i<inst->mJobs;i++){
+	 for(i=0;i<inst->mAgents;i++){
 		 sol->resUsage[i] = 0;
 	 }
 	 for(i=0;i<inst->nJobs;i++){
