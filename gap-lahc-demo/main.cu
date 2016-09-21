@@ -20,10 +20,10 @@ int main(int argc, char *argv[]){
 	struct timeval fim;
 	//int tmili;
 	int i;
-	int l_c;
+	int l_c = 0;
 	size_t size_solution;
 	const char *fileName = argv[1];
-	l_c = atoi(argv[2]);
+	//l_c = atoi(argv[2]);
 	//const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i,j;
@@ -42,8 +42,8 @@ int main(int argc, char *argv[]){
 	else
 	{
 		printf("Found %d GPUs!\n", deviceCount);
-		gpuSetDevice(0);
-		printf("GPU 0 initialized!\n");
+		gpuSetDevice(1);
+		printf("GPU 1 initialized!\n");
 	}
 
 	Instance *d_instance;
