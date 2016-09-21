@@ -4,7 +4,7 @@ Solution* allocationPointersSolution(Instance *inst){
 	size_t size_solution = sizeof(Solution)
 									+ sizeof(Ts)*inst->nJobs //vector s
 									+ sizeof(TresUsage)*inst->mAgents //vector resUsage
-									+ sizeof (Texcess)*inst->mAgents; //vector excess
+									+ sizeof(Texcess)*inst->mAgents; //vector excess
 	Solution* sol;
 	sol = (Solution*)malloc(size_solution);
 	assert(sol!=NULL);

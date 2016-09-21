@@ -178,13 +178,14 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			s[threadIdx.x].excess = excess_t;
 
 		}else{
+			s[threadIdx.x].excess=0;
 			for(i=0;i<inst->mAgents;i++){
 				if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
 					s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
 				}else{
 					s[threadIdx.x].excess_temp[i] = 0;
 				}
-
+				s[threadIdx.x].excess += s[threadIdx.x].excess_temp[i];
 			}
 
 		}
