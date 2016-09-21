@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
 							+ sizeof(TresUsage)*inst->mAgents //vector resUsage
 							+ sizeof(Texcess)*inst->mAgents; //vector excess
 	
-	printf("size solution in main: %d\n", size_solution);
+
 	srand(time(NULL));
 	//for(int i=0;i<=10;i++){
 	//schc_cpu(sol, inst, 50);

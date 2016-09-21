@@ -9,13 +9,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	int delta;
 	int aux;
 	int test_ite = 0 ;
-
 	__shared__ Solution s[nThreads];
 	__shared__ int max_ite;
 	if(threadIdx.x<1){
 		max_ite = 0;
 	}
-
 	long int c_min;
 	long int c_max;
 	//int c_media=0;
@@ -27,6 +25,24 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	short int t;
 	int i,j, ite, flag;
 	long int excess_t = 0;
+
+	sol->costFinal=0;
+	for(i=0;i<inst->mAgents;i++){
+		sol->resUsage[i] = 0;
+	}
+	for(i=0;i<inst->nJobs;i++){
+		sol->s[i]= curand(&states[threadIdx.x])%inst->mAgents;
+		sol->resUsage[sol->s[i]]+=inst->resourcesAgent[i*inst->mAgents+sol->s[i]];
+		sol->costFinal+=inst->cost[i*inst->mAgents+sol->s[i]];
+	}
+	sol->excess = 0;
+	for(i=0;i<inst->mAgents;i++){
+		if(sol->resUsage[i]-inst->capacity[i]>0){
+			sol->excess += sol->resUsage[i]-inst->capacity[i];
+		}
+		sol->excess_temp[i] = sol->resUsage[i];
+	}
+
 	s[threadIdx.x].s = (Ts*)malloc(sizeof(Ts)*inst->nJobs);
 	s[threadIdx.x].resUsage = (TresUsage*)malloc(sizeof(TresUsage)*inst->mAgents);
 	s[threadIdx.x].excess_temp = (Texcess*)malloc(sizeof(Texcess)*inst->mAgents);
@@ -134,9 +150,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		//excess_temp = 0;
 		excess_t = 0;
 		for(i=0;i<inst->mAgents;i++){
-				if(s[threadIdx.x].excess_temp[i]>inst->capacity[i]){
-					excess_t += s[threadIdx.x].excess_temp[i] - inst->capacity[i];
-				}
+			if(s[threadIdx.x].excess_temp[i]>inst->capacity[i]){
+				excess_t += s[threadIdx.x].excess_temp[i] - inst->capacity[i];
+			}
 		}
 		if ((s[threadIdx.x].costFinal + delta + excess_t*10000 < B_c)||(s[threadIdx.x].costFinal + delta + excess_t*10000<= s[threadIdx.x].costFinal + s[threadIdx.x].excess*10000))
 		{
@@ -184,7 +200,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 			if(s[i].costFinal + s[i].excess*10000< c_min)
 			{
- 				c_min = s[i].costFinal + s[i].excess*10000;
+				c_min = s[i].costFinal + s[i].excess*10000;
 				sol->costFinal = s[i].costFinal;
 				for(j=0; j<inst->nJobs; j++)
 				{
@@ -196,10 +212,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				}
 				sol->excess = 0;
 				for(i=0;i<inst->mAgents;i++){
-						 if(sol->resUsage[i]-inst->capacity[i]>0){
-							sol->excess += sol->resUsage[i]-inst->capacity[i];
-						 }
-						 sol->excess_temp[i] = sol->resUsage[i];
+					if(sol->resUsage[i]-inst->capacity[i]>0){
+						sol->excess += sol->resUsage[i]-inst->capacity[i];
+					}
+					sol->excess_temp[i] = sol->resUsage[i];
 
 				}
 
@@ -230,10 +246,10 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
 	//printf("Begin createGpuSolution!\n");
 
 	size_t size_solution = sizeof(Solution)
-                        				   + sizeof(Ts)*nJobs //vector s
-                        				   + sizeof(TresUsage)*mAgents
-                        				   + sizeof(Texcess)*mAgents; // vector resUsage
-	printf("size solution in createGpu: %d\n", size_solution);
+                        						   + sizeof(Ts)*nJobs //vector s
+                        						   + sizeof(TresUsage)*mAgents
+                        						   + sizeof(Texcess)*mAgents; // vector resUsage
+
 	Solution *d_sol;
 	gpuMalloc((void**)&d_sol, size_solution);
 	//printf("malloc solution ok!\n");
