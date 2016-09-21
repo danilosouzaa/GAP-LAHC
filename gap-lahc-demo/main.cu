@@ -22,9 +22,9 @@ int main(int argc, char *argv[]){
 	int i;
 	int l_c = 0;
 	size_t size_solution;
-	//const char *fileName = argv[1];
+	const char *fileName = argv[1];
 	//l_c = atoi(argv[2]);
-	const char *fileName = "a05100";
+	//const char *fileName = "a05100";
 	int deviceCount = 0;
 	//int i,j;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 	else
 	{
 		printf("Found %d GPUs!\n", deviceCount);
-		gpuSetDevice(0);
+		gpuSetDevice(1);
 		printf("GPU 1 initialized!\n");
 	}
 
