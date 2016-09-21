@@ -58,7 +58,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			}
 			op = curand(&states[threadIdx.x])%2;
 			//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
-			aux = 0;
+			aux = 1;
 
 			// op = 1;
 			if(op == 1)
@@ -69,14 +69,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
 				s[threadIdx.x].excess_temp[aux2] += inst->resourcesAgent[aux1*inst->mAgents+aux2];
 				s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux1]] -= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-				//{
-				//	aux=1;
-				//}
+
 			}
 			else
 			{
 				delta=0;
-				aux = 1;
 				t = curand(&states[threadIdx.x])%8 + 2;
 				aux_p[0] = curand(&states[threadIdx.x])%inst->nJobs;
 				delta -= inst->cost[ aux_p[0]*inst->mAgents+s[threadIdx.x].s[aux_p[0]]];
