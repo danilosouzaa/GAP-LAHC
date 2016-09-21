@@ -244,6 +244,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
+	free(s[threadIdx.x].excess_temp);
 
 }
 
