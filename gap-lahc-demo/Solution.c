@@ -3,13 +3,15 @@
 Solution* allocationPointersSolution(Instance *inst){
 	size_t size_solution = sizeof(Solution)
 									+ sizeof(Ts)*inst->nJobs //vector s
-									+ sizeof(TresUsage)*inst->mAgents; //vector resUsage
+									+ sizeof(TresUsage)*inst->mAgents //vector resUsage
+									+ sizeof (Texcess)*inst->mAgents; //vector excess
 	Solution* sol;
 	sol = (Solution*)malloc(size_solution);
 	assert(sol!=NULL);
 	memset(sol,0,size_solution);
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
+	sol->excess_temp = (Texcess*)(sol->resUsage + inst->mAgents);
 
 	return sol;
 }
@@ -41,7 +43,11 @@ Solution* InitialRandom(Instance *inst){
 	 sol->excess = 0;
 	 for(i=0;i<inst->mAgents;i++){
 		 if(sol->resUsage[i]-inst->capacity[i]>0){
+			 sol->excess_temp[i] = sol->resUsage[i]-inst->capacity[i];
 			 sol->excess += sol->resUsage[i]-inst->capacity[i];
+
+		 }else{
+			 sol->excess_temp[i] = 0;
 		 }
 	 }
 	 printf("custo da solução inicial: %ld\n", sol->costFinal + 10000*sol->excess);

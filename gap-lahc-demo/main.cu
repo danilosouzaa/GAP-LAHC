@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 	else
 	{
 		printf("Found %d GPUs!\n", deviceCount);
-		gpuSetDevice(1);
+		gpuSetDevice(0);
 		printf("GPU 1 initialized!\n");
 	}
 
@@ -74,7 +74,8 @@ int main(int argc, char *argv[]){
 	//printf("greedy solution ok!\n");
 	size_solution = sizeof(Solution)
 							+ sizeof(Ts)*inst->nJobs //vector s
-							+ sizeof(TresUsage)*inst->mAgents; //vector resUsage
+							+ sizeof(TresUsage)*inst->mAgents //vector resUsage
+							+ sizeof(Texcess)*inst->mAgents; //vector excess
 	
 
 	srand(time(NULL));
@@ -123,6 +124,7 @@ int main(int argc, char *argv[]){
 	//reallocation pointers of Solution
 	sol->s = (Ts*)(sol+1);
 	sol->resUsage = (TresUsage*)(sol->s + inst->nJobs);
+	sol->excess_temp = (Texcess*)(sol->resUsage + inst->mAgents);
 
 	/*showSolution(sol,inst);
 	for(i=0;i<inst->nJobs;i++){

@@ -26,10 +26,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	short int op;
 	short int t;
 	int i,j, ite, flag, excess_t = 0;
-	int *excess_temp;
-	excess_temp = (int*)malloc(sizeof(int)*inst->mAgents);
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
+	s[threadIdx.x].excess_temp = (long int*)malloc(sizeof(long int)*inst->mAgents);
 	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
 	s[threadIdx.x].costFinal = sol->costFinal;
 	s[threadIdx.x].excess = sol->excess;
@@ -44,9 +43,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
 		if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
-			excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
+			s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
 		}else{
-			excess_temp[i] = 0;
+			s[threadIdx.x].excess_temp[i] = 0;
 		}
 	}
 	L_c = curand(&states[threadIdx.x])%101 + 50;
@@ -60,7 +59,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			op = curand(&states[threadIdx.x])%2;
 			//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 			aux=0;
-			excess_temp = 0;
+			excess_t = 0;
 			// op = 1;
 			if(op == 1)
 			{
@@ -69,14 +68,14 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				aux2 = curand(&states[threadIdx.x])%inst->mAgents;
 				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
 				if(s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] > inst->capacity[aux2]){
-					excess_temp[aux2] = s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] - inst->capacity[aux2];
+					s[threadIdx.x].excess_temp[aux2] = s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] - inst->capacity[aux2];
 				}else {
-					excess_temp[aux2] = 0;
+					s[threadIdx.x].excess_temp[aux2] = 0;
 				}
 				if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]){
-					excess_temp[s[threadIdx.x].s[aux1]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->capacity[s[threadIdx.x].s[aux1]];
+					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux1]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->capacity[s[threadIdx.x].s[aux1]];
 				}else{
-					excess_temp[s[threadIdx.x].s[aux1]] = 0;
+					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux1]] = 0;
 				}
 				//{
 				//	aux=1;
@@ -110,9 +109,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 						aux_p[i]=(aux_p[i]+1)%(inst->nJobs);
 					}while(aux_p[i]!=aux1);
 					if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] > inst->capacity[s[threadIdx.x].s[aux_p[i]]]){
-						excess_temp[s[threadIdx.x].s[aux_p[i]]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] - inst->capacity[s[threadIdx.x].s[aux_p[i]]];
+						s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[i]]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] - inst->capacity[s[threadIdx.x].s[aux_p[i]]];
 					}else{
-						excess_temp[s[threadIdx.x].s[aux_p[i]]] = 0;
+						s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[i]]] = 0;
 					}
 					if(aux1==aux_p[i]){
 						aux=0;
@@ -138,10 +137,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				delta += inst->cost[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]];
 				if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
 				{
-					excess_temp[s[threadIdx.x].s[aux_p[0]]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]-inst->capacity[s[threadIdx.x].s[aux_p[0]]];
+					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[0]]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]-inst->capacity[s[threadIdx.x].s[aux_p[0]]];
 				//	aux=0;
 				}else{
-					excess_temp[s[threadIdx.x].s[aux_p[0]]] = 0;
+					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[0]]] = 0;
 				}
 			}
 			test_ite++;
@@ -153,7 +152,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		test_ite = 0;
 		//excess_temp = 0;
 		for(i=0;i<inst->mAgents;i++){
-				 excess_t += excess_temp[i];
+				 excess_t += s[threadIdx.x].excess_temp[i];
 		}
 
 
@@ -247,7 +246,8 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
 
 	size_t size_solution = sizeof(Solution)
                         				   + sizeof(Ts)*nJobs //vector s
-                        				   + sizeof(TresUsage)*mAgents; // vector resUsage
+                        				   + sizeof(TresUsage)*mAgents
+                        				   + sizeof(Texcess)*mAgents; // vector resUsage
 	Solution *d_sol;
 	gpuMalloc((void**)&d_sol, size_solution);
 	//printf("malloc solution ok!\n");
@@ -258,6 +258,7 @@ Solution* createGPUsolution(Solution* h_solution,TnJobs nJobs, TmAgents mAgents)
 
 	h_solution->s = (Ts*)(d_sol+1);
 	h_solution->resUsage = (TresUsage*)(h_solution->s + nJobs);
+	h_solution->excess_temp = (Texcess*)(h_solution->resUsage + mAgents);
 
 	//printf("adjusting solution GPU pointers\n");
 	//getchar();

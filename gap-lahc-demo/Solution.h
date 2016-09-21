@@ -20,6 +20,7 @@ typedef struct{
 	Texcess excess;
     Ts *s;
     TresUsage *resUsage;
+    Texcess *excess_temp;
 }Solution;
 
 Solution* allocationPointersSolution(Instance *inst);
