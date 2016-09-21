@@ -25,30 +25,29 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	short int t;
 	int i,j, ite, flag;
 	long int excess_t = 0;
-	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
-
-	sol->costFinal=0;
-	for(i=0;i<inst->mAgents;i++){
-		sol->resUsage[i] = 0;
-	}
-	for(i=0;i<inst->nJobs;i++){
-		sol->s[i]= curand(&states[threadIdx.x])%inst->mAgents;
-		sol->resUsage[sol->s[i]]+=inst->resourcesAgent[i*inst->mAgents+sol->s[i]];
-		sol->costFinal+=inst->cost[i*inst->mAgents+sol->s[i]];
-	}
-	sol->excess = 0;
-	for(i=0;i<inst->mAgents;i++){
-		if(sol->resUsage[i]-inst->capacity[i]>0){
-			sol->excess += sol->resUsage[i]-inst->capacity[i];
-		}
-		sol->excess_temp[i] = sol->resUsage[i];
-	}
-
 	s[threadIdx.x].s = (Ts*)malloc(sizeof(Ts)*inst->nJobs);
 	s[threadIdx.x].resUsage = (TresUsage*)malloc(sizeof(TresUsage)*inst->mAgents);
 	s[threadIdx.x].excess_temp = (Texcess*)malloc(sizeof(Texcess)*inst->mAgents);
+	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
 
-	s[threadIdx.x].costFinal = sol->costFinal;
+	s[threadIdx.x].costFinal = 0;
+	for(i=0;i<inst->mAgents;i++){
+		s[threadIdx.x].resUsage[i] = 0;
+	}
+	for(i=0;i<inst->nJobs;i++){
+		s[threadIdx.x].s[i] = curand(&states[threadIdx.x])%inst->mAgents;
+		s[threadIdx.x].resUsage[sol->s[i]]+=inst->resourcesAgent[i*inst->mAgents+sol->s[i]];
+		s[threadIdx.x].costFinal+=inst->cost[i*inst->mAgents+sol->s[i]];
+	}
+	s[threadIdx.x].excess = 0;
+	for(i=0;i<inst->mAgents;i++){
+		if(s[threadIdx.x].resUsage[i]-inst->capacity[i]>0){
+			s[threadIdx.x].excess += s[threadIdx.x].resUsage[i]-inst->capacity[i];
+		}
+		s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i];
+	}
+
+	/*s[threadIdx.x].costFinal = sol->costFinal;
 	s[threadIdx.x].excess = sol->excess;
 	if(threadIdx.x==1){
 		printf("Custo da solucao inicial: %ld\n", s[threadIdx.x].costFinal + s[threadIdx.x].excess*10000);
@@ -60,7 +59,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	for(i=0; i<inst->mAgents; i++)
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
-	}
+	}*/
 	L_c = curand(&states[threadIdx.x])%101 + 50;
 	B_c = sol->costFinal;
 	N_c = 0;
