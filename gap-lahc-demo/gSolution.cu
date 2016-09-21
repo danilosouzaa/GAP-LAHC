@@ -36,8 +36,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	}
 	for(i=0;i<inst->nJobs;i++){
 		s[threadIdx.x].s[i] = curand(&states[threadIdx.x])%inst->mAgents;
-		s[threadIdx.x].resUsage[sol->s[i]]+=inst->resourcesAgent[i*inst->mAgents+sol->s[i]];
-		s[threadIdx.x].costFinal+=inst->cost[i*inst->mAgents+sol->s[i]];
+		s[threadIdx.x].resUsage[s[threadIdx.x].s[i]]+=inst->resourcesAgent[i*inst->mAgents+s[threadIdx.x].s[i]];
+		s[threadIdx.x].costFinal+=inst->cost[i*inst->mAgents+s[threadIdx.x].s[i]];
 	}
 	s[threadIdx.x].excess = 0;
 	for(i=0;i<inst->mAgents;i++){
