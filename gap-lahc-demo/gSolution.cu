@@ -50,8 +50,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	ite = 0;
 	while(ite<=100000)
 	{
-		//do
-		//{
+		do
+		{
 			for(i=0; i<inst->mAgents; i++)
 			{
 				s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i];
@@ -129,8 +129,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				//	aux=0;
 			}
 			test_ite++;
-		//}
-		//while(aux==0);
+		}while(aux==0);
 		if(test_ite> max_ite){
 			max_ite = test_ite;
 		}
@@ -138,8 +137,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		//excess_temp = 0;
 		excess_t = 0;
 		for(i=0;i<inst->mAgents;i++){
-				if(s[threadIdx.x].excess_temp[i]>inst->capacity[i])
-				 excess_t += s[threadIdx.x].excess_temp[i] - inst->capacity[i];
+				if(s[threadIdx.x].excess_temp[i]>inst->capacity[i]){
+					excess_t += s[threadIdx.x].excess_temp[i] - inst->capacity[i];
+				}
 		}
 		if ((s[threadIdx.x].costFinal + delta + excess_t*10000 < B_c)||(s[threadIdx.x].costFinal + delta + excess_t*10000<= s[threadIdx.x].costFinal + s[threadIdx.x].excess*10000))
 		{
@@ -178,7 +178,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	if(threadIdx.x < 1)
 	{
 		c_min = s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000;
-		c_max = s[threadIdx.x].costFinal;
+		c_max = s[threadIdx.x].costFinal + s[threadIdx.x].excess*1000;
 		for(i=0; i<nThreads; i++)
 		{
 			for(j=0;j<inst->nJobs;j++){
@@ -208,7 +208,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 
 			}
-			if(s[i].costFinal>c_max){
+			if(s[i].costFinal + s[threadIdx.x].excess*1000 > c_max){
 				c_max = s[i].costFinal + s[i].excess*10000;
 			}
 			//c_media+=s[i].costFinal;
