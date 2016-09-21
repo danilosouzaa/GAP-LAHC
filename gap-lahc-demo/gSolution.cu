@@ -43,7 +43,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	for(i=0; i<inst->mAgents; i++)
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
-		s[threadIdx.x].excess_temp[i] = sol->excess_temp[i];
+		if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
+			s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
+		}else{
+			s[threadIdx.x].excess_temp[i] = 0;
+		}
 	}
 	L_c = curand(&states[threadIdx.x])%101 + 50;
 	B_c = sol->costFinal;
@@ -224,7 +228,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				for(i=0;i<inst->mAgents;i++){
 						 if(sol->resUsage[i]-inst->capacity[i]>0){
 							sol->excess += sol->resUsage[i]-inst->capacity[i];
+							sol->excess_temp[i] = sol->resUsage[i]-inst->capacity[i];
+						 }else{
+							 sol->excess_temp[i] = 0;
 						 }
+
 				}
 
 
