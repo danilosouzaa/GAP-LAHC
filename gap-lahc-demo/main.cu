@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 	else
 	{
 		printf("Found %d GPUs!\n", deviceCount);
-		gpuSetDevice(0);
+		gpuSetDevice(1);
 		printf("GPU 1 initialized!\n");
 	}
 

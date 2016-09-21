@@ -25,7 +25,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	short int aux_p[10];
 	short int op;
 	short int t;
-	int i,j, ite, flag, excess_t = 0;
+	int i,j, ite, flag;
+	long int excess_t = 0;
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
 	s[threadIdx.x].excess_temp = (long int*)malloc(sizeof(long int)*inst->mAgents);
@@ -42,11 +43,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	for(i=0; i<inst->mAgents; i++)
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
-		if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
-			s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
-		}else{
-			s[threadIdx.x].excess_temp[i] = 0;
-		}
+		s[threadIdx.x].excess_temp[i] = sol->excess_temp[i];
 	}
 	L_c = curand(&states[threadIdx.x])%101 + 50;
 	B_c = sol->costFinal;
@@ -58,7 +55,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		//{
 			op = curand(&states[threadIdx.x])%2;
 			//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
-			aux=0;
+			aux = 0;
 			excess_t = 0;
 			// op = 1;
 			if(op == 1)
@@ -179,6 +176,16 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				s[threadIdx.x].s[aux_p[t]] = aux;
 			}
 			s[threadIdx.x].excess = excess_t;
+
+		}else{
+			for(i=0;i<inst->mAgents;i++){
+				if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
+					s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
+				}else{
+					s[threadIdx.x].excess_temp[i] = 0;
+				}
+
+			}
 
 		}
 		N_c++;

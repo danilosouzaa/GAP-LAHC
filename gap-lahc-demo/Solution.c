@@ -35,6 +35,9 @@ Solution* InitialRandom(Instance *inst){
 	 int i;
 	 sol->costFinal=0;
 	 srand(time(NULL));
+	 for(i=0;i<inst->mJobs;i++){
+		 sol->resUsage[i] = 0;
+	 }
 	 for(i=0;i<inst->nJobs;i++){
 		 sol->s[i]= rand()%inst->mAgents;
 		 sol->resUsage[sol->s[i]]+=inst->resourcesAgent[i*inst->mAgents+sol->s[i]];
