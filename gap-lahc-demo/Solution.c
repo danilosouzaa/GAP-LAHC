@@ -20,7 +20,7 @@ void showSolution(Solution *sol, Instance *inst){
 	int i;
 	printf("Data of Solution:\n");
 	printf("Cost of Solution: %ld\n", sol->costFinal);
-	printf("Excess of capacity in Solution: %ld\n", sol->excess);
+	printf("Excess of capacity in Solution: %d\n", sol->excess);
 	for(i=0;i<inst->nJobs;i++){
 		printf("Job %d allocated in Agent %d.\n",i+1, sol->s[i]+1);
 	}

@@ -11,7 +11,7 @@
 
 EXTERN_C_BEGIN
 typedef long int TcostFinal;
-typedef long int Texcess;
+typedef int Texcess;
 typedef short int Ts;
 typedef short int TresUsage;
 

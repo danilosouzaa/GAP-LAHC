@@ -29,7 +29,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	long int excess_t = 0;
 	s[threadIdx.x].s = (short int*)malloc(sizeof(short int)*inst->nJobs);
 	s[threadIdx.x].resUsage = (short int*)malloc(sizeof(short int)*inst->mAgents);
-	s[threadIdx.x].excess_temp = (long int*)malloc(sizeof(long int)*inst->mAgents);
+	s[threadIdx.x].excess_temp = (int*)malloc(sizeof(int)*inst->mAgents);
 	curand_init(seed[threadIdx.x],threadIdx.x,0,&states[threadIdx.x]);
 	s[threadIdx.x].costFinal = sol->costFinal;
 	s[threadIdx.x].excess = sol->excess;
@@ -51,8 +51,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	}
 	L_c = curand(&states[threadIdx.x])%101 + 50;
 	B_c = sol->costFinal;
-	N_c=0;
-	ite=0;
+	N_c = 0;
+	ite = 0;
 	while(ite<=100000)
 	{
 		//do
