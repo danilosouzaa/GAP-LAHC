@@ -48,12 +48,9 @@ Solution* InitialRandom(Instance *inst){
 	 sol->excess = 0;
 	 for(i=0;i<inst->mAgents;i++){
 		 if(sol->resUsage[i]-inst->capacity[i]>0){
-			 sol->excess_temp[i] = sol->resUsage[i]-inst->capacity[i];
 			 sol->excess += sol->resUsage[i]-inst->capacity[i];
-
-		 }else{
-			 sol->excess_temp[i] = 0;
 		 }
+		 sol->excess_temp[i] = sol->resUsage[i];
 	 }
 	 printf("custo da solução inicial: %ld\n", sol->costFinal + 10000*sol->excess);
 	 return sol;

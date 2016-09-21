@@ -43,11 +43,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	for(i=0; i<inst->mAgents; i++)
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i];
-		if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
-			s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
-		}else{
-			s[threadIdx.x].excess_temp[i] = 0;
-		}
 	}
 	L_c = curand(&states[threadIdx.x])%101 + 50;
 	B_c = sol->costFinal;
@@ -57,10 +52,14 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	{
 		//do
 		//{
+			for(i=0; i<inst->mAgents; i++)
+			{
+				s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i];
+			}
 			op = curand(&states[threadIdx.x])%2;
 			//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 			aux = 0;
-			excess_t = 0;
+
 			// op = 1;
 			if(op == 1)
 			{
@@ -68,16 +67,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				aux1 = curand(&states[threadIdx.x])%inst->nJobs;
 				aux2 = curand(&states[threadIdx.x])%inst->mAgents;
 				delta = inst->cost[aux1*inst->mAgents+aux2] - inst->cost[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
-				if(s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] > inst->capacity[aux2]){
-					s[threadIdx.x].excess_temp[aux2] = s[threadIdx.x].resUsage[aux2] + inst->resourcesAgent[aux1*inst->mAgents+aux2] - inst->capacity[aux2];
-				}else {
-					s[threadIdx.x].excess_temp[aux2] = 0;
-				}
-				if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] > inst->capacity[s[threadIdx.x].s[aux1]]){
-					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux1]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux1]] - inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]] - inst->capacity[s[threadIdx.x].s[aux1]];
-				}else{
-					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux1]] = 0;
-				}
+				s[threadIdx.x].excess_temp[aux2] += inst->resourcesAgent[aux1*inst->mAgents+aux2];
+				s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux1]] -= inst->resourcesAgent[aux1*inst->mAgents + s[threadIdx.x].s[aux1]];
 				//{
 				//	aux=1;
 				//}
@@ -109,11 +100,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 						}
 						aux_p[i]=(aux_p[i]+1)%(inst->nJobs);
 					}while(aux_p[i]!=aux1);
-					if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] > inst->capacity[s[threadIdx.x].s[aux_p[i]]]){
-						s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[i]]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] + inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] - inst->capacity[s[threadIdx.x].s[aux_p[i]]];
-					}else{
-						s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[i]]] = 0;
-					}
+
+					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[i]]] += ( inst->resourcesAgent[aux_p[i-1]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]] - inst->resourcesAgent[aux_p[i]*inst->mAgents + s[threadIdx.x].s[aux_p[i]]]);
+
 					if(aux1==aux_p[i]){
 						aux=0;
 					}
@@ -136,13 +125,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 				}
 				delta += inst->cost[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]];
-				if(s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]>inst->capacity[s[threadIdx.x].s[aux_p[0]]])
-				{
-					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[0]]] = s[threadIdx.x].resUsage[s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] + inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]-inst->capacity[s[threadIdx.x].s[aux_p[0]]];
+				s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[0]]] += (inst->resourcesAgent[aux_p[t]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]] - inst->resourcesAgent[aux_p[0]*inst->mAgents + s[threadIdx.x].s[aux_p[0]]]);
 				//	aux=0;
-				}else{
-					s[threadIdx.x].excess_temp[s[threadIdx.x].s[aux_p[0]]] = 0;
-				}
 			}
 			test_ite++;
 		//}
@@ -152,11 +136,11 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		}
 		test_ite = 0;
 		//excess_temp = 0;
+		excess_t = 0;
 		for(i=0;i<inst->mAgents;i++){
-				 excess_t += s[threadIdx.x].excess_temp[i];
+				if(s[threadIdx.x].excess_temp[i]>inst->capacity[i])
+				 excess_t += s[threadIdx.x].excess_temp[i] - inst->capacity[i];
 		}
-
-
 		if ((s[threadIdx.x].costFinal + delta + excess_t*10000 < B_c)||(s[threadIdx.x].costFinal + delta + excess_t*10000<= s[threadIdx.x].costFinal + s[threadIdx.x].excess*10000))
 		{
 			s[threadIdx.x].costFinal += delta;
@@ -180,17 +164,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				s[threadIdx.x].s[aux_p[t]] = aux;
 			}
 			s[threadIdx.x].excess = excess_t;
-
-		}else{
-			s[threadIdx.x].excess=0;
-			for(i=0;i<inst->mAgents;i++){
-				if(s[threadIdx.x].resUsage[i]>inst->capacity[i]){
-					s[threadIdx.x].excess_temp[i] = s[threadIdx.x].resUsage[i] - inst->capacity[i];
-				}else{
-					s[threadIdx.x].excess_temp[i] = 0;
-				}
-				s[threadIdx.x].excess += s[threadIdx.x].excess_temp[i];
-			}
 
 		}
 		N_c++;
@@ -228,10 +201,8 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				for(i=0;i<inst->mAgents;i++){
 						 if(sol->resUsage[i]-inst->capacity[i]>0){
 							sol->excess += sol->resUsage[i]-inst->capacity[i];
-							sol->excess_temp[i] = sol->resUsage[i]-inst->capacity[i];
-						 }else{
-							 sol->excess_temp[i] = 0;
 						 }
+						 sol->excess_temp[i] = sol->resUsage[i];
 
 				}
 
