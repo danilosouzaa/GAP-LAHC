@@ -9,15 +9,16 @@
 
 #include "gpulib/types.h"
 
+
+
 EXTERN_C_BEGIN
+
 typedef int TcostFinal;
-typedef int Texcess;
 typedef short int Ts;
 typedef short int TresUsage;
 
 typedef struct{
-	TcostFinal costFinal;
-	Texcess excess;
+	TcostFinal *costFinal;
     Ts *s;
     TresUsage *resUsage;
 }Solution;

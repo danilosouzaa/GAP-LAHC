@@ -1,5 +1,10 @@
 #include  "guloso.h"
 
+ 
+
+const int nBlock = 4;
+const int nThread = 576;
+
 int* inicializeVector(Instance *inst, int p1, int p2)
 {
     int *vOrdem;
@@ -51,8 +56,10 @@ Solution* guloso(Instance *inst, int p1, int p2)
     int i,j,agent;
     int cont=0;
     memset(allocated,0,sizeof(int)*inst->nJobs );
+    
     Solution *sol = allocationPointersSolution(inst);
-    sol->costFinal=0;
+    
+    sol->costFinal[0]=0;
     vOrdem=inicializeVector(inst,p1,p2);
     for(i=0; i<inst->nJobs ; i++)
     {
@@ -64,14 +71,24 @@ Solution* guloso(Instance *inst, int p1, int p2)
             {
                 allocated[i]=1;
                 sol->s[i]=agent;
-                sol->costFinal+=inst->cost[iReturn(i,agent,inst->nJobs ,inst->mAgents)];
+                sol->costFinal[0]+=inst->cost[iReturn(i,agent,inst->nJobs ,inst->mAgents)];
                 sol->resUsage[agent]+=inst->resourcesAgent[iReturn(i,agent,inst->nJobs ,inst->mAgents)];
                 cont++;
             }
         }
     }
+    for(i=1;i<nBlock;i++){
+    	for(j=0;j<inst->nJobs;j++){
+    		sol->s[i*inst->nJobs + j] = sol->s[j];
+    	}
+    	for(j=0;j<inst->mAgents;j++){
+    		sol->resUsage[i*inst->mAgents + j] = sol->resUsage[j];
+    	}
+    	sol->costFinal[i] = sol->costFinal[0];
+    }
+    	
     if(cont!=inst->nJobs ){
-        sol->costFinal=0;
+        sol->costFinal[0]=0;
     }
     free(allocated);
     free(vOrdem);
