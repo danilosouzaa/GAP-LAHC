@@ -70,7 +70,7 @@ Solution* guloso(Instance *inst, int p1, int p2)
             if((allocated[i]==0)&&(inst->resourcesAgent[iReturn(i,agent,inst->nJobs ,inst->mAgents)]+sol->resUsage[agent]<=inst->capacity[agent]))
             {
                 allocated[i]=1;
-                sol->s[i]=agent;
+                sol->s[i] = ((char)agent);
                 sol->costFinal[0]+=inst->cost[iReturn(i,agent,inst->nJobs ,inst->mAgents)];
                 sol->resUsage[agent]+=inst->resourcesAgent[iReturn(i,agent,inst->nJobs ,inst->mAgents)];
                 cont++;

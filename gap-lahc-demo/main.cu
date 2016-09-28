@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 	//showSolution(sol,inst);
 	//printf("greedy solution ok!\n");
 	size_solution = sizeof(Solution)
-							+sizeof(TcostFinal)*nBlocks
+							+ sizeof(TcostFinal)*nBlocks
 							+ sizeof(Ts)*(inst->nJobs*nBlocks) //vector s
 							+ sizeof(TresUsage)*(inst->mAgents*nBlocks); //vector resUsage
 	
@@ -136,11 +136,9 @@ int main(int argc, char *argv[]){
 	sol->costFinal = (TcostFinal*)(sol+1);
 	sol->s = (Ts*)(sol->costFinal + nBlocks);
 	sol->resUsage = (TresUsage*)(sol->s + (inst->nJobs*nBlocks));
-
-	printf("%d\n",sol->costFinal[0]);
-	printf("%d\n",sol->costFinal[1]);
-	printf("%d\n",sol->costFinal[2]);
-	printf("%d\n",sol->costFinal[3]);
+	for(i=0;i<nBlocks;i++){
+		printf("%d\n",sol->costFinal[i]);
+	}
 	/*showSolution(sol,inst);
 	for(i=0;i<inst->nJobs;i++){
 		for(j=0;j<inst->mAgents;j++){
