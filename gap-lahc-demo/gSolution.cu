@@ -66,10 +66,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 					delta -= inst->cost[ aux_p[0]*inst->mAgents+ ((int)s[threadIdx.x].s[aux_p[0]])];
 					for(i=1; i<=t; i++)
 					{
-
+						aux_p[t] = inst->nJobs-1;
 						aux_p[i] = curand(&states[blockIdx.x*nThreads + threadIdx.x])%inst->nJobs;
 						k = aux_p[i];
-						aux_p[t] = inst->nJobs-1;
 						do{
 							flag = 0;
 							for(j=0; j<i; j++)
