@@ -15,19 +15,23 @@
 
 const int nThreads = 576;
 const int nBlocks = 4;
-//const int nBlocks = 4;
 int main(int argc, char *argv[]){
-//int main(){
-	struct timeval inicio;
-	struct timeval fim;
-	int tmili,i;
+	//counter
+	int i,j;
+	
+	//Parameters of heuristic SCHC
 	int l_c=0;
+	
+	//Variable with size of struct solution
 	size_t size_solution;
+	
+	//File name of instance GAP
 	const char *fileName = argv[1];
-	//l_c = atoi(argv[2]);
-	//const char *fileName = "a05100";
+	
+	//Variable with numbers of GPU's
 	int deviceCount = 0;
-	//int i,j;
+	
+	//Commands for verify use correct of GPU
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
 	if (error_id != cudaSuccess)
 	{
@@ -46,87 +50,102 @@ int main(int argc, char *argv[]){
 		gpuSetDevice(0);
 		printf("GPU 0 initialized!\n");
 	}
-
+	
+	//Pointer of instance and solution for use in GPU (device)
 	Instance *d_instance;
 	Solution *d_solution;
+	
+	//Pointer of states for use with curand
 	curandState_t* states;
+	cudaMalloc((void**) &states, (nThreads*nBlocks) * sizeof(curandState_t));
+	
+	//Pointer of seed for use with curand (host)
 	unsigned int *h_seed = (unsigned int*)malloc(sizeof(unsigned int)*(nThreads*nBlocks));
 	srand(time(NULL));
 	for(i=0;i<(nThreads*nBlocks);i++){
 		h_seed[i] = rand()%100000;
 	}
-	cudaMalloc((void**) &states, (nThreads*nBlocks) * sizeof(curandState_t));
-
-
-	Instance *inst = loadInstance(fileName);
-	//showInstance(inst);
-	//printf("Load data instance ok!\n");
-
-
+	
+	//Pointer of instance and solution for use in GPU (device)
+	Instance *inst = loadInstance(fileName); // Load the Instance 
 	Solution *sol;
 	
+	
+	//Generate of solution initial with greedy heuristic
 	if(fileName[0]=='e'){
 		sol = guloso(inst,1,20);
 	}else{
 		sol = guloso(inst,1,2);
 	}
 	
-	//showSolution(sol,inst);
-	//printf("greedy solution ok!\n");
+	//Definy of Solution size
 	size_solution = sizeof(Solution)
 							+ sizeof(TcostFinal)*nBlocks
 							+ sizeof(Ts)*(inst->nJobs*nBlocks) //vector s
 							+ sizeof(TresUsage)*(inst->mAgents*nBlocks); //vector resUsage
 	
-
-	srand(time(NULL));
-	//for(int i=0;i<=10;i++){
-	//schc_cpu(sol, inst, 50);
-	//}
-	//getchar();
+	//Reallocation of pointers Instance and Solution for GPU (device)
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
 	
+	//Pointer of rank in host, use for compute frequency of solution
 	unsigned int *h_rank = (unsigned int*)malloc(sizeof(unsigned int)*inst->nJobs*inst->mAgents);
 	memset(h_rank,0,sizeof(unsigned int)*inst->nJobs*inst->mAgents);
+	
+	//Pointers seed and rank in device (GPU)
 	unsigned int *d_rank;
 	unsigned int *d_seed;
+	
+	//Event and gpu for contability time 
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 	
+	// Allocation of pointer and copy value in d_seed (Device)
 	gpuMalloc((void*)&d_seed, sizeof(unsigned int)*(nThreads*nBlocks));
 	gpuMemcpy(d_seed, h_seed, sizeof(unsigned int)*(nThreads*nBlocks), cudaMemcpyHostToDevice);
 
+	// Allocation of pointer and copy value in d_rank (Device)
 	gpuMalloc((void* ) &d_rank, sizeof(unsigned int)*inst->nJobs*inst->mAgents);
 	gpuMemcpy(d_rank, h_rank,sizeof(unsigned int)*inst->nJobs*inst->mAgents , cudaMemcpyHostToDevice);
 	
-	int blockSize;      // The launch configurator returned block size 
-	int minGridSize;    // The minimum grid size needed to achieve the maximum occupancy for a full device launch 
-	int gridSize;
-	int N = 1000000;
 	
-	cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, SCHC, 0, N);
+	//int blockSize;      // The launch configurator returned block size 
+	//int minGridSize;    // The minimum grid size needed to achieve the maximum occupancy for a full device launch 
+	//int gridSize;
+	//int N = 1000000;
 	
-	printf("block size %d\n",blockSize);
-	printf("Min Grid %d\n",minGridSize);
-	gettimeofday(&inicio, NULL);
-	//schc_cpu(sol,inst,100);
+	//cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, SCHC, 0, N);
+	
+	//printf("block size %d\n",blockSize);
+	//printf("Min Grid %d\n",minGridSize);
+	
+	//Initial count time
 	cudaEventRecord(start);
 	
+	//Execute kernell of SCHC
 	SCHC<<<nBlocks,nThreads>>>(d_instance,d_solution, d_seed ,d_rank, states, l_c);
 
+	//Final count time
 	cudaEventRecord(stop);
 
+	
+	//copy solution of device to host
 	gpuMemcpy(sol, d_solution, size_solution, cudaMemcpyDeviceToHost);
+	
+	//copy rank (frequency) of device to host
 	gpuMemcpy(h_rank, d_rank,sizeof(unsigned int)*inst->nJobs*inst->mAgents , cudaMemcpyDeviceToHost);
+	
+	//syncronize of output GPU
 	cudaEventSynchronize(stop);
+	
+	//Compute time of execution in kernel GPU
 	float milliseconds = 0;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	printf("%.4fms\n", milliseconds);
-	gettimeofday(&fim, NULL);
-	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec) + (fim.tv_usec - inicio.tv_usec) / 1000);
-	//printf("tempo: %d\n",tmili);
+
+	
+	
 	//reallocation pointers of Instance
 	inst->cost = (Tcost*)(inst+1);
 	inst->resourcesAgent =(TresourcesAgent*) (inst->cost +(inst->nJobs*inst->mAgents));
@@ -138,14 +157,19 @@ int main(int argc, char *argv[]){
 	sol->resUsage = (TresUsage*)(sol->s + (inst->nJobs*nBlocks));
 	for(i=0;i<nBlocks;i++){
 		printf("%d\n",sol->costFinal[i]);
-	}
-	/*showSolution(sol,inst);
-	for(i=0;i<inst->nJobs;i++){
-		for(j=0;j<inst->mAgents;j++){
-			printf("Qnt Job %d foi alocada no Agente %d: %d\n",i+1,j+1,h_rank[i*inst->mAgents+j]);
+		for(j=0;j<inst->nJobs;j++){
+			printf("%d",((int)sol->s[j + inst->nJobs*i ]));
+			
 		}
-	}*/
+		printf("\n");
+	}
+	
+	
+	
+	//Create file .dat for use in LP
 	createDat(inst, h_rank, fileName);
+	
+	//Free memory allocated
 	gpuFree(d_instance);
 	gpuFree(d_solution);
 	gpuFree(d_rank);
@@ -153,6 +177,7 @@ int main(int argc, char *argv[]){
 	gpuFree(states);
 	free(inst);
 	free(sol);
-	//printf("program finished successfully!\n");
+
+	
 	return 0;
 }

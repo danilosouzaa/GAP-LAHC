@@ -5,6 +5,7 @@
 const int nBlock = 4;
 const int nThread = 576;
 
+//Create vector with priority of allocation jobs in Agents 
 int* inicializeVector(Instance *inst, int p1, int p2)
 {
     int *vOrdem;

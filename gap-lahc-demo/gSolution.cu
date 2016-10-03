@@ -5,6 +5,7 @@ const int nBlocks = 4;
 
 __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned int *rank, curandState_t* states, int L_c)
 {
+	
 	int B_c;
 	int N_c;
 	int delta;
@@ -15,38 +16,43 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 	short int op;
 	short int t;
 	int i,j, ite, flag;
-	s[threadIdx.x].costFinal = (TcostFinal*)malloc(sizeof(TcostFinal));
+	
+	s[threadIdx.x].costFinal = (TcostFinal*)malloc(sizeof(TcostFinal)*2);
 	s[threadIdx.x].s = (Ts*)malloc(sizeof(Ts)*inst->nJobs);
 	s[threadIdx.x].resUsage = (TresUsage*)malloc(sizeof(TresUsage)*inst->mAgents);
 	curand_init(seed[blockIdx.x*nThreads + threadIdx.x],blockIdx.x*nThreads + threadIdx.x,0,&states[blockIdx.x*nThreads + threadIdx.x]);
+	
 	s[threadIdx.x].costFinal[0] = sol->costFinal[blockIdx.x];
+	
 	for(i=0; i<inst->nJobs; i++)
 	{
 		s[threadIdx.x].s[i] = sol->s[i + blockIdx.x*inst->nJobs];
 	}
+	
 	for(i=0; i<inst->mAgents; i++)
 	{
 		s[threadIdx.x].resUsage[i] = sol->resUsage[i + blockIdx.x*inst->mAgents];
 	}
-	L_c = curand(&states[threadIdx.x])%101 + 50;
+	
+	L_c = curand(&states[blockIdx.x*nThreads + threadIdx.x])%101 + 50;
 	B_c = sol->costFinal[blockIdx.x];
 	N_c = 0;
 	ite = 0;
-	while(ite<=100000)
+	
+	while(ite<=10)
 	{
 		do
 		{
 			op = curand(&states[blockIdx.x*nThreads + threadIdx.x])%2;
-			//printf("custo final temp: %d\n", s[threadIdx.x].costFinal);
 			aux=0;
-			// op = 1;
+			
 			if(op == 1)
 			{
 				delta=0;
 				aux_p[0] = curand(&states[blockIdx.x*nThreads + threadIdx.x])%inst->nJobs;
 				aux_p[1] = curand(&states[blockIdx.x*nThreads + threadIdx.x])%inst->mAgents;
-				delta = inst->cost[aux_p[0]*inst->mAgents+aux_p[1]] - inst->cost[aux_p[0]*inst->mAgents + ((int)s[threadIdx.x].s[aux_p[0]])];
-				if(( s[threadIdx.x].resUsage[aux_p[1]] + inst->resourcesAgent[aux_p[0]*inst->mAgents+aux_p[1]] <= inst->capacity[aux_p[1]])&&
+				delta = inst->cost[aux_p[0]*inst->mAgents + aux_p[1]] - inst->cost[aux_p[0]*inst->mAgents + ((int)s[threadIdx.x].s[aux_p[0]])];
+				if(( s[threadIdx.x].resUsage[aux_p[1]] + inst->resourcesAgent[aux_p[0]*inst->mAgents + aux_p[1]] <= inst->capacity[aux_p[1]])&&
 						(s[threadIdx.x].resUsage[((int)s[threadIdx.x].s[aux_p[0]])] - inst->resourcesAgent[aux_p[0]*inst->mAgents + ((int)s[threadIdx.x].s[aux_p[0]])] <= inst->capacity[((int)s[threadIdx.x].s[aux_p[0]])]))
 				{
 					aux=1;
@@ -64,7 +70,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 					aux_p[i] = curand(&states[blockIdx.x*nThreads + threadIdx.x])%inst->nJobs;
 					j = aux_p[i];
-					aux_p[t]= inst->nJobs-1;
+					aux_p[t] = inst->nJobs-1;
 					do{
 						flag = 0;
 						for(j=0; j<i; j++)
@@ -126,32 +132,36 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		ite++;
 	}
 	
+	__syncthreads();
+	for(j=0;j<inst->nJobs;j++){
+		atomicInc(&rank[j * inst->mAgents + ((int)s[threadIdx.x].s[j])],(nThreads*nBlocks)+1);
+	}
+	__syncthreads();
+
 	if(threadIdx.x < 1)
 	{
 		c_min = s[threadIdx.x].costFinal[0];
-		
+		aux = threadIdx.x;
 		for(i=0; i<nThreads; i++)
 		{	
-			for(j=0;j<inst->nJobs;j++){
-				atomicInc(&rank[j * inst->mAgents + s[i].s[j]],(nThreads*nBlocks)+1);
-			}
+			
 			if(s[i].costFinal[0]<c_min)
 			{
 				c_min = s[i].costFinal[0];
-	
-				sol->costFinal[blockIdx.x] = s[i].costFinal[0];
-				for(j=0; j<inst->nJobs; j++)
-				{
-					sol->s[j + blockIdx.x*inst->nJobs] = s[i].s[j] ;
-				}
-				for(j=0; j<inst->mAgents; j++)
-				{
-					sol->resUsage[j + blockIdx.x*inst->nJobs] = s[i].resUsage[j];
-				}
+				aux = i;
 			}
 		}
-	}
-
+		
+		sol->costFinal[blockIdx.x] = s[aux].costFinal[0];
+		for(j=0; j<inst->nJobs; j++)
+		{
+			sol->s[j + blockIdx.x*inst->nJobs] = s[aux].s[j] ;
+		}
+		for(j=0; j<inst->mAgents; j++)
+		{
+			sol->resUsage[j + blockIdx.x*inst->mAgents] = s[aux].resUsage[j];	
+		}
+	}	
 	free(s[threadIdx.x].costFinal);
 	free(s[threadIdx.x].s);
 	free(s[threadIdx.x].resUsage);
