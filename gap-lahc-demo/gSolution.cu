@@ -38,7 +38,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		N_c = 0;
 		ite = 0;
 		
-		while(ite<=1000)
+		while(ite<=100000)
 		{
 			do
 			{
@@ -85,6 +85,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 						}while(aux_p[i]!=k);
 						if(k==aux_p[i]){
 							aux=0;
+							break;
 						}
 						delta += inst->cost[aux_p[i-1]*inst->mAgents+((int)s[threadIdx.x].s[aux_p[i]])];
 						delta -= inst->cost[aux_p[i]*inst->mAgents+((int)s[threadIdx.x].s[aux_p[i]])];
