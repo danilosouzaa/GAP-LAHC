@@ -33,6 +33,9 @@ void schc_cpu(Solution *sol, Instance *inst, int L_c);
 
 void createDat(Instance *inst, unsigned int *rank,const char *fileName);
 
+void create_solution(Solution *sol, Instance *inst,int pos_best, const char *fileName);
+
+void create_frequency(Instance *inst, unsigned int *rank, const char *fileName);
 EXTERN_C_END
 
 #endif

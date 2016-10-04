@@ -19,6 +19,11 @@ int main(int argc, char *argv[]){
 	//counter
 	int i,j;
 	
+	
+	//Position and Best Solution
+	int pos_best;
+	int cost_best;
+	
 	//Parameters of heuristic SCHC
 	int l_c=0;
 	
@@ -155,20 +160,26 @@ int main(int argc, char *argv[]){
 	sol->costFinal = (TcostFinal*)(sol+1);
 	sol->s = (Ts*)(sol->costFinal + nBlocks);
 	sol->resUsage = (TresUsage*)(sol->s + (inst->nJobs*nBlocks));
-	for(i=0;i<nBlocks;i++){
-		printf("%d\n",sol->costFinal[i]);
-		for(j=0;j<inst->nJobs;j++){
-			printf("%d",((int)sol->s[j + inst->nJobs*i ]));
-			
+	pos_best=0;
+	cost_best  = sol->costFinal[0];
+	for(i=1;i<nBlocks;i++){
+		if(sol->costFinal[i]<cost_best){
+			pos_best = i;
+			cost_best = sol->costFinal[i]; 
 		}
-		printf("\n");
 	}
 	
-	
+	printf("Cost best solution: %d\n",cost_best);
+	for(i=0;i<inst->nJobs;i++){
+		printf("%d ", sol->s[i+inst->nJobs*pos_best]+1);
+		
+	}
+	printf("\n");
 	
 	//Create file .dat for use in LP
 	createDat(inst, h_rank, fileName);
-	
+	create_solution(sol,inst,pos_best,fileName);
+	create_frequency(inst, h_rank, fileName);
 	//Free memory allocated
 	gpuFree(d_instance);
 	gpuFree(d_solution);

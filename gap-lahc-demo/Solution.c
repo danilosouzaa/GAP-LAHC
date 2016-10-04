@@ -34,7 +34,45 @@ void showSolution(Solution *sol, Instance *inst){
 void schc_cpu(Solution *sol, Instance *inst, int L_c){
 
 }
-
+void create_solution(Solution *sol, Instance *inst,int pos_best, const char *fileName){
+		FILE *f;
+		char nf[30]="";
+		strcat(nf,"MIP_");
+		strcat(nf,fileName);
+		strcat(nf,".txt");
+		int i;
+		f = fopen (nf,"w");
+		if(f==NULL){
+			printf("erro \n ");
+		}else{
+			for(i=0;i<inst->nJobs;i++){
+				fprintf(f,"x(%d,%d)\n",i+1,sol->s[i + inst->nJobs*pos_best]+1);
+			}
+		}
+		fclose(f);
+}
+void create_frequency(Instance *inst, unsigned int *rank, const char *fileName){
+			FILE *f;
+			char nf[30]="";
+			strcat(nf,"Freq_");
+			strcat(nf,fileName);
+			strcat(nf,".txt");
+			int i,j;
+			f = fopen (nf,"w");
+			if(f==NULL){
+				printf("erro \n ");
+			}else{
+				for(i=0;i<inst->nJobs;i++){
+					for(j=0;j<inst->mAgents; j++){
+						if(rank[j*inst->mAgents + i]>0){
+							fprintf(f,"x(%d,%d) = %d \n",i+1, j+1 , rank[i*inst->mAgents + j] );
+						}
+					}
+				}
+			}
+			fclose(f);
+			printf("Create frenquecy ok!\n");
+}
 
 void createDat(Instance *inst, unsigned int *rank,const char *fileName){
 	FILE *f;
