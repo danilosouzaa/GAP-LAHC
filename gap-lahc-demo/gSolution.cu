@@ -10,18 +10,18 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		int delta;
 		int aux;
 		__shared__ Solution s[nThreads];
+		__shared__ int costFinal[nThreads];
 		int c_min;
 		short int aux_p[10];
 		short int op;
 		short int t;
 		int i,j,k, ite, flag;
 		
-		s[threadIdx.x].costFinal = (TcostFinal*)malloc(sizeof(TcostFinal));
 		s[threadIdx.x].s = (Ts*)malloc(sizeof(Ts)*inst->nJobs);
 		s[threadIdx.x].resUsage = (TresUsage*)malloc(sizeof(TresUsage)*inst->mAgents);
 		curand_init(seed[blockIdx.x*nThreads + threadIdx.x],blockIdx.x*nThreads + threadIdx.x,0,&states[blockIdx.x*nThreads + threadIdx.x]);
 		
-		s[threadIdx.x].costFinal[0] = sol->costFinal[blockIdx.x];
+		costFinal[threadIdx.x] = sol->costFinal[blockIdx.x];
 		
 		for(i=0; i<inst->nJobs; i++)
 		{
@@ -34,7 +34,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		}
 		
 		L_c = curand(&states[blockIdx.x*nThreads + threadIdx.x])%101 + 50;
-		B_c = sol->costFinal[blockIdx.x];
+		B_c = costFinal[threadIdx.x];
 		N_c = 0;
 		ite = 0;
 		
@@ -44,7 +44,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			{
 				op = curand(&states[blockIdx.x*nThreads + threadIdx.x])%2;
 				aux=0;
-				
 				if(op == 1)
 				{
 					delta=0;
@@ -99,9 +98,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			}
 			while(aux==0);
 
-			if ((s[threadIdx.x].costFinal[0] + delta < B_c)||(s[threadIdx.x].costFinal[0] + delta <= s[threadIdx.x].costFinal[0]))
+			if ((costFinal[threadIdx.x] + delta < B_c)||(costFinal[threadIdx.x] + delta <= costFinal[threadIdx.x]))
 			{
-				s[threadIdx.x].costFinal[0] += delta;
+				costFinal[threadIdx.x] += delta;
 				if(op==1)
 				{
 					s[threadIdx.x].resUsage[((int)s[threadIdx.x].s[aux_p[0]])] -= inst->resourcesAgent[aux_p[0]*inst->mAgents + ((int)s[threadIdx.x].s[aux_p[0]]) ];
@@ -125,7 +124,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			N_c++;
 			if(N_c >= L_c)
 			{
-				B_c = s[threadIdx.x].costFinal[0];
+				B_c = costFinal[threadIdx.x];
 				N_c = 0;
 			}
 			ite++;
@@ -139,19 +138,18 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 
 		if(threadIdx.x < 1)
 		{
-			c_min = s[threadIdx.x].costFinal[0];
-			aux = threadIdx.x;
+			c_min = costFinal[threadIdx.x];
 			for(i=0; i<nThreads; i++)
 			{	
 				
-				if(s[i].costFinal[0]<c_min)
+				if(costFinal[threadIdx.x]<c_min)
 				{
-					c_min = s[i].costFinal[0];
+					c_min = costFinal[threadIdx.x];
 					aux = i;
 				}
 			}
 			
-			sol->costFinal[blockIdx.x] = s[aux].costFinal[0];
+			sol->costFinal[blockIdx.x] = costFinal[aux];
 			for(j=0; j<inst->nJobs; j++)
 			{
 				sol->s[j + blockIdx.x*inst->nJobs] = s[aux].s[j] ;
@@ -161,7 +159,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				sol->resUsage[j + blockIdx.x*inst->mAgents] = s[aux].resUsage[j];	
 			}
 		}	
-		free(s[threadIdx.x].costFinal);
+		//free(s[threadIdx.x].costFinal);
 		free(s[threadIdx.x].s);
 		free(s[threadIdx.x].resUsage);
 }
