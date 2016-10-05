@@ -14,7 +14,7 @@
 #include "guloso.h"
 
 const int nThreads = 576;
-const int nBlocks = 4;
+const int nBlocks = 28;
 int main(int argc, char *argv[]){
 	//counter
 	int i,j;

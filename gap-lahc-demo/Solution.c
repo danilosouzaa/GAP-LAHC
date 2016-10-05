@@ -1,7 +1,7 @@
 #include "Solution.h"
 
 const int nThreads = 576;
-const int nBlocks = 4;
+const int nBlocks = 28;
 
 Solution* allocationPointersSolution(Instance *inst){
 	size_t size_solution = sizeof(Solution)

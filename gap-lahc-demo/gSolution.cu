@@ -1,7 +1,7 @@
 #include "gSolution.cuh"
 
 const int nThreads = 576;
-const int nBlocks = 4;
+const int nBlocks = 28;
 
 __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned int *rank, curandState_t* states, int L_c)
 {
@@ -38,7 +38,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		N_c = 0;
 		ite = 0;
 		
-		while(ite<=100)
+		while(ite<=100000)
 		{
 			do
 			{
@@ -95,6 +95,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 						aux=0;
 					}
 				}
+				ite++;
 			}
 			while(aux==0);
 
@@ -127,7 +128,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				B_c = costFinal[threadIdx.x];
 				N_c = 0;
 			}
-			ite++;
+			
 		}
 		
 		__syncthreads();
