@@ -163,6 +163,7 @@ int main(int argc, char *argv[]){
 	pos_best=0;
 	cost_best  = sol->costFinal[0];
 	for(i=1;i<nBlocks;i++){
+		printf("cost final: %d\n",sol->costFinal[i]);
 		if(sol->costFinal[i]<cost_best){
 			pos_best = i;
 			cost_best = sol->costFinal[i]; 
