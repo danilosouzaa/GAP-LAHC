@@ -38,7 +38,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		N_c = 0;
 		ite = 0;
 		ite_min = 0;
-		while(ite<=100)
+		while(ite<=100000)
 		{
 			do
 			{
