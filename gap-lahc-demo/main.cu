@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 	//Pointer of instance and solution for use in GPU (device)
 	Instance *inst = loadInstance(fileName); // Load the Instance 
 	Solution *sol;
-	
+
 	
 	//Generate of solution initial with greedy heuristic
 	if(fileName[0]=='e'){
@@ -129,6 +129,7 @@ int main(int argc, char *argv[]){
 	cudaEventRecord(start);
 	
 	//Execute kernell of SCHC
+	printf("TESTE\n");
 	SCHC<<<nBlocks,nThreads>>>(d_instance,d_solution, d_seed ,d_rank, states, l_c);
 
 	//Final count time
@@ -162,6 +163,7 @@ int main(int argc, char *argv[]){
 	sol->resUsage = (TresUsage*)(sol->s + (inst->nJobs*nBlocks));
 	pos_best=0;
 	cost_best  = sol->costFinal[0];
+	printf("cost final: %d\n",sol->costFinal[0]);
 	for(i=1;i<nBlocks;i++){
 		printf("cost final: %d\n",sol->costFinal[i]);
 		if(sol->costFinal[i]<cost_best){
