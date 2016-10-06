@@ -104,7 +104,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 				costFinal[threadIdx.x] += delta;
 				if((costFinal[threadIdx.x]<1700)&&(ite_min==0)){
 					ite_min = ite;
-					printf("ite min:%d - %d\n",ite_min, threadIdx.x);
+					printf("ite min:%d - %d - %d\n",ite_min,blockIdx.x, threadIdx.x);
 				}
 				if(op==1)
 				{
