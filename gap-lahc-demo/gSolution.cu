@@ -8,7 +8,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		int B_c;
 		int N_c;
 		int delta;
-		int aux;
+		int aux, ite_min;
 		__shared__ Solution s[nThreads];
 		__shared__ int costFinal[nThreads];
 		int c_min;
@@ -37,7 +37,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		B_c = costFinal[threadIdx.x];
 		N_c = 0;
 		ite = 0;
-		
+		ite_min = 0;
 		while(ite<=100)
 		{
 			do
@@ -102,6 +102,10 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			if ((costFinal[threadIdx.x] + delta < B_c)||(costFinal[threadIdx.x] + delta <= costFinal[threadIdx.x]))
 			{
 				costFinal[threadIdx.x] += delta;
+				if((costFinal[threadIdx.x]<1714)&&(ite_min==0)){
+					ite_min = ite;
+					printf("ite min: %d\n",ite_min);
+				}
 				if(op==1)
 				{
 					s[threadIdx.x].resUsage[((int)s[threadIdx.x].s[aux_p[0]])] -= inst->resourcesAgent[aux_p[0]*inst->mAgents + ((int)s[threadIdx.x].s[aux_p[0]]) ];
