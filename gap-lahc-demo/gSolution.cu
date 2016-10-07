@@ -1,7 +1,7 @@
 #include "gSolution.cuh"
 
 const int nThreads = 576;
-const int nBlocks = 28;
+const int nBlocks = 4;
 
 __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned int *rank, curandState_t* states, int L_c)
 {
@@ -16,7 +16,6 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		short int op;
 		short int t;
 		int i,j,k, ite, flag;
-		
 		s[threadIdx.x].s = (Ts*)malloc(sizeof(Ts)*inst->nJobs);
 		s[threadIdx.x].resUsage = (TresUsage*)malloc(sizeof(TresUsage)*inst->mAgents);
 		curand_init(seed[blockIdx.x*nThreads + threadIdx.x],blockIdx.x*nThreads + threadIdx.x,0,&states[blockIdx.x*nThreads + threadIdx.x]);
@@ -38,7 +37,7 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 		N_c = 0;
 		ite = 0;
 		ite_min = 0;
-		while(ite<=100000)
+		while(ite<=100)
 		{
 			do
 			{
@@ -147,9 +146,9 @@ __global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed, unsigned
 			for(i=1; i<nThreads; i++)
 			{	
 				
-				if(costFinal[threadIdx.x]<c_min)
+				if(costFinal[i]<c_min)
 				{
-					c_min = costFinal[threadIdx.x];
+					c_min = costFinal[i];
 					aux = i;
 				}
 			}

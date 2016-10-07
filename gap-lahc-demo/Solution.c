@@ -1,7 +1,7 @@
 #include "Solution.h"
 
 const int nThreads = 576;
-const int nBlocks = 28;
+const int nBlocks = 4;
 
 Solution* allocationPointersSolution(Instance *inst){
 	size_t size_solution = sizeof(Solution)
@@ -64,7 +64,7 @@ void create_frequency(Instance *inst, unsigned int *rank, const char *fileName){
 			}else{
 				for(i=0;i<inst->nJobs;i++){
 					for(j=0;j<inst->mAgents; j++){
-						if(rank[j*inst->mAgents + i]>0){
+						if(rank[i*inst->mAgents + j]>0){
 							fprintf(f,"x(%d,%d) = %d \n",i+1, j+1 , rank[i*inst->mAgents + j] );
 						}
 					}

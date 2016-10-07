@@ -2,7 +2,7 @@
 
  
 
-const int nBlock = 28;
+const int nBlock = 4;
 const int nThread = 576;
 
 //Create vector with priority of allocation jobs in Agents 
