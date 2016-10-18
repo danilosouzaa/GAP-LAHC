@@ -8,6 +8,7 @@ Solution* allocationPointersSolution(Instance *inst){
 									+ sizeof(TcostFinal)*nBlocks
 									+ sizeof(Ts)*(inst->nJobs*nBlocks) //vector s
 									+ sizeof(TresUsage)*(inst->mAgents*nBlocks); //vector resUsage
+	printf("teste allocation size solution: %d\n",size_solution);
 	Solution* sol;
 	sol = (Solution*)malloc(size_solution);
 	assert(sol!=NULL);

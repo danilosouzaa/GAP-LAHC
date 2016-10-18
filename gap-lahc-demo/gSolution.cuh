@@ -13,7 +13,7 @@ extern "C" {
 
 }
 
-__global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed,unsigned int *rank, curandState_t* states, int L_c);
+__global__ void SCHC(Instance *inst, Solution *sol, unsigned int *seed,unsigned int *rank, curandState_t* states, int L_c, int max_ite);
 
 
 #endif /* GSOLUTION_CUH_ */

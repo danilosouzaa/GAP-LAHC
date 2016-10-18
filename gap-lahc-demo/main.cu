@@ -15,6 +15,7 @@
 
 const int nThreads = 576;
 const int nBlocks = 4;
+
 int main(int argc, char *argv[]){
 	//counter
 	int i,j;
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]){
 	
 	//File name of instance GAP
 	const char *fileName = argv[1];
-	
+	int max_ite = atoi(argv[2]);
 	//Variable with numbers of GPU's
 	int deviceCount = 0;
 	
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]){
 		h_seed[i] = rand()%100000;
 	}
 	
-	//Pointer of instance and solution for use in GPU (device)
+	//Pointer of instance and solution for use in CPU (host)
 	Instance *inst = loadInstance(fileName); // Load the Instance 
 	Solution *sol;
 
@@ -88,7 +89,7 @@ int main(int argc, char *argv[]){
 							+ sizeof(TcostFinal)*nBlocks
 							+ sizeof(Ts)*(inst->nJobs*nBlocks) //vector s
 							+ sizeof(TresUsage)*(inst->mAgents*nBlocks); //vector resUsage
-	
+	printf("teste size solution: %d\n",size_solution);
 	//Reallocation of pointers Instance and Solution for GPU (device)
 	d_instance = createGPUInstance(inst, inst->nJobs, inst->mAgents);
 	d_solution = createGPUsolution(sol,inst->nJobs, inst->mAgents);
@@ -130,7 +131,7 @@ int main(int argc, char *argv[]){
 	
 	//Execute kernell of SCHC
 	printf("TESTE\n");
-	SCHC<<<nBlocks,nThreads>>>(d_instance,d_solution, d_seed ,d_rank, states, l_c);
+	SCHC<<<nBlocks,nThreads>>>(d_instance,d_solution, d_seed ,d_rank, states, l_c, max_ite);
 
 	//Final count time
 	cudaEventRecord(stop);
